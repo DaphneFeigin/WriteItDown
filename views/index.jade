@@ -1,5 +1,26 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  div.tasklist-div
+    div(style='text-align: left')
+      h2 This is my list!
+    form
+      br
+      input(type='checkbox')
+      | Trader Joes
+      br
+      input(type='checkbox')
+      | Target
+      br
+      input(type='checkbox')
+      | Laundry
+      br
+      input(type='checkbox')
+      | Hook the garage up to the internet
+      br
+      br
+      | New Task
+      input.input-element(type='text')
+      input.input-element(type='submit', value='Submit')
+      
+
