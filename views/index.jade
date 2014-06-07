@@ -18,9 +18,15 @@ block content
       input(type='checkbox')
       | Hook the garage up to the internet
       br
+      if newTask
+        input(type='checkbox')
+        | #{newTask}
+      br
       br
       | New Task
-      input.input-element(type='text', name='new-task')
+      input.input-element(type='text', name='newTask')
       input.input-element(type='submit', value='Submit')
+  
+  
       
 
