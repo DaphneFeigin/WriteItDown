@@ -10,6 +10,10 @@ var tableName = 'WriteItDown';
 module.exports = {
   
   putNewTask: function(ownerId, newTaskTitle, callback) {
+    var taskId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+        return v.toString(16);
+    });
     var now = new Date();
     var sevenDaysFromNow = new Date();
     sevenDaysFromNow.setDate(now.getDate() + 7);
@@ -18,6 +22,9 @@ module.exports = {
       Item: {
         OwnerId: {
           S: ownerId
+        },
+        TaskId: {
+          S: taskId
         },
         TaskTitle: {
           S: newTaskTitle
