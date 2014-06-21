@@ -5,15 +5,15 @@ block content
     div(style='text-align: left')
       h2 This is my list!
     form
+      | New Task
+      input.input-element(type='text', name='newTask')
+      input.input-element(type='submit', value='Submit')
       each task in taskList
         br
         input(type='checkbox')
         | #{task}
       br
       br
-      | New Task
-      input.input-element(type='text', name='newTask')
-      input.input-element(type='submit', value='Submit')
   
   a(href='/') Home
   
