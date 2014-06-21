@@ -1,5 +1,8 @@
 extends layout
 
+block head-javascripts
+  script(src='/javascripts/monkeys.js')
+
 block content
   div.tasklist-div
     div(style='text-align: left')
@@ -14,8 +17,9 @@ block content
         | #{task}
       br
       br
-  
+      input.input-element(type='button', value='Delete' onclick="onDeleteClicked()")
   a(href='/') Home
+  
   
       
 
