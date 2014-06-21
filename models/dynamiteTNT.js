@@ -5,11 +5,47 @@ AWS.config.loadFromPath('./creds.aws')
 var dynamoDB = new AWS.DynamoDB();
 
 var tableName = 'WriteItDown';
+var indexByTitle = 'TaskTitle-index';
 
+function findTaskByTitle(ownerId, taskTitle, callback) {
+    var queryParams = {
+        TableName: tableName,
+        IndexName: indexByTitle,
+        Select: 'ALL_PROJECTED_ATTRIBUTES',
+        ConsistentRead: true,
+        KeyConditions: {
+            OwnerId: {
+                ComparisonOperator: 'EQ',
+                AttributeValueList: [
+                    {
+                        S: ownerId
+                    }
+                ]
+            },
+            TaskTitle: {
+                ComparisonOperator: 'EQ',
+                AttributeValueList: [
+                    {
+                        S: taskTitle
+                    }
+                ]
+            }
+        }
+    };
+    dynamoDB.query(queryParams, function(err, data) {
+        if (err) {
+            console.error(err, err.stack);
+        }
+        tasks = data ? data.Items : null;
+        callback(err, tasks);
+    });    
+}
 
-module.exports = {
-  
-  putNewTask: function(ownerId, newTaskTitle, callback) {
+function createNewTask(ownerId, newTaskTitle, callback) {
+    var taskId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+        return v.toString(16);
+    });
     var now = new Date();
     var sevenDaysFromNow = new Date();
     sevenDaysFromNow.setDate(now.getDate() + 7);
@@ -18,6 +54,9 @@ module.exports = {
       Item: {
         OwnerId: {
           S: ownerId
+        },
+        TaskId: {
+          S: taskId
         },
         TaskTitle: {
           S: newTaskTitle
@@ -29,11 +68,6 @@ module.exports = {
           N: sevenDaysFromNow.getTime().toString()
         },
       },
-      Expected: {
-          TaskTitle: {
-              ComparisonOperator: 'NULL'
-          }
-      }
     };
     dynamoDB.putItem(putParams, function(err, data) {
       if (err) {
@@ -43,7 +77,22 @@ module.exports = {
         
         callback(err);
       }
-    });    
+    });        
+}
+
+module.exports = {
+  
+  putNewTask: function(ownerId, newTaskTitle, callback) {
+    findTaskByTitle(ownerId, newTaskTitle, function(err, items) {
+        if (items && (items.length > 0)) {
+            console.log(newTaskTitle + " already exists");
+            callback(null);     
+        } else {
+            createNewTask(ownerId, newTaskTitle, function(err) {
+                callback(err);
+            });
+        }
+    });
   },
   
   queryTasksForOwner: function(ownerId, callback) {
