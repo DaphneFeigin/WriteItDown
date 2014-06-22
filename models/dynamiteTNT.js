@@ -95,6 +95,48 @@ module.exports = {
     });
   },
   
+  deleteTask: function(ownerId, taskId, callback) {
+    deleteParams = {
+        TableName: tableName,
+        Key: {
+            OwnerId: {
+                S: ownerId
+            },
+            TaskId: {
+                S: taskId
+            }
+        }
+    };
+    dynamoDB.deleteItem(deleteParams, function(err) {
+        callback(err);
+    })
+  },
+  
+  deleteTasks: function(ownerId, taskIds, callback) {
+    writeRequests = taskIds.map(function(taskId) {
+        deleteRequest = {
+            Key: {
+                OwnerId: {
+                    S: ownerId
+                },
+                TaskId: {
+                    S: taskId
+                }
+            }
+        };
+        return { DeleteRequest: deleteRequest }; 
+    });
+    batchWriteParams = {
+        RequestItems: {
+        }
+    };
+    batchWriteParams.RequestItems[tableName] = writeRequests;
+    dynamoDB.batchWriteItem(batchWriteParams, function(err) {
+        if (err) console.error(err, err.stack);
+        callback(err);
+    });
+  },
+  
   queryTasksForOwner: function(ownerId, callback) {
     var queryParams = {
       TableName: tableName,

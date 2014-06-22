@@ -40,7 +40,15 @@ router.get('/', function(req, res) {
 });
 
 router.get('/delete', function(req, res) {
-  displayAllTasks(clownie, res);
+  taskIds = Object.keys(req.query);
+  dynamiteTNT.deleteTasks(clownie, taskIds, function(err) {
+    if (err) {
+      console.error(err, err.stack);
+    } else {
+      console.log("deleted " + taskIds.length + " items");
+    }
+    displayAllTasks(clownie, res);
+  });
 });
 
 module.exports = router;
