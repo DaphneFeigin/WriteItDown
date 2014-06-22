@@ -36,9 +36,11 @@ router.get('/', function(req, res) {
     });
   } else {
     displayAllTasks(clownie, res);
-  }
-  
-   
+  } 
+});
+
+router.get('/delete', function(req, res) {
+  displayAllTasks(clownie, res);
 });
 
 module.exports = router;

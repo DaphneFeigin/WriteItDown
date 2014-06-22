@@ -113,7 +113,10 @@ module.exports = {
     };
     dynamoDB.query(queryParams, function(err, data) {
         tasks = data.Items.map(function(item) {
-          return item.TaskTitle.S;
+          itemModel = {}
+          itemModel.id = item.TaskId.S;
+          itemModel.name = item.TaskTitle.S;
+          return itemModel;
         });
         callback(err, tasks);
     });
