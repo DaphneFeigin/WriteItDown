@@ -7,7 +7,7 @@ block content
   div.tasklist-div
     div(style='text-align: left')
       h2 This is my list!
-    form
+    form(action='create', method='get')
       | New Task
       input.input-element(type='text', name='newTask')
       input.input-element(type='submit', value='Submit')
@@ -20,6 +20,6 @@ block content
       br
       input.input-element(type='submit', value='Delete')
   
-  
+  a(href='/') Home
       
 

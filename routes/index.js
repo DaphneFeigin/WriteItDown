@@ -23,20 +23,16 @@ function displayAllTasks(ownerId, res) {
 
 /* GET home page. */
 router.get('/', function(req, res) {
-  console.log(req.query);
-  
-  // Put new item if they submitted a new item
-  if (req.query.newTask) {
-    dynamiteTNT.putNewTask(clownie, req.query.newTask, function(err) {
-      if (err) {
-        console.err(err, err.stack);
-      }
-      
-      displayAllTasks(clownie, res);
-    });
-  } else {
+  displayAllTasks(clownie, res);
+});
+
+router.get('/create', function(req, res) {
+  dynamiteTNT.putNewTask(clownie, req.query.newTask, function(err) {
+    if (err) {
+      console.err(err, err.stack);
+    }
     displayAllTasks(clownie, res);
-  } 
+  })
 });
 
 router.get('/delete', function(req, res) {
