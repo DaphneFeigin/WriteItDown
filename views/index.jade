@@ -11,15 +11,9 @@ block content
       | New Task
       input.input-element(type='text', name='newTask')
       input.input-element(type='submit', value='Submit')
-    form(action='delete', method='get')
+     ul
       each task in taskList
-        br
-        input(type='checkbox', name="#{task.id}")
-        | #{task.name}
-      br
-      br
-      input.input-element(type='submit', value='Delete')
-  
+        li.task-list-item #{task.name}
   a(href='/') Home
       
 
