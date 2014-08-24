@@ -1,7 +1,15 @@
 // dynamiteTNT.js
 
 var AWS = require('aws-sdk');
-AWS.config.loadFromPath('./creds.aws')
+
+// creds.aws is expected in the root directory and looks like this:
+//{
+//  "accessKeyId":"YOUR_ACCESS_KEY_ID",
+//  "secretAccessKey":"YOUR_SECRET_KEY",
+//  "region":"us-east-1"
+//}
+AWS.config.loadFromPath('./creds.aws');
+
 var dynamoDB = new AWS.DynamoDB();
 
 var tableName = 'WriteItDown';
