@@ -166,6 +166,9 @@ module.exports = {
           itemModel = {}
           itemModel.id = item.TaskId.S;
           itemModel.name = item.TaskTitle.S;
+          if (item.Notes) {
+            itemModel.notes = item.Notes.S;
+          }
           return itemModel;
         });
         callback(err, tasks);
