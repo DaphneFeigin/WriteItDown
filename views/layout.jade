@@ -3,8 +3,11 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/javascripts/jquery-ui-1.11.1.custom/jquery-ui.theme.css')
+    link(rel='stylesheet', href='/javascripts/jquery-ui-1.11.1.custom/jquery-ui.css')
     script(src='/javascripts/jquery-1.11.1.js')
     script(src='/javascripts/jquery-ui-1.11.1.custom/jquery-ui.js')
     block head-javascripts
   body
     block content
+    block body-javascripts

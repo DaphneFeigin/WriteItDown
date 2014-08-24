@@ -1,3 +1,4 @@
-function onDeleteClicked(args) {
-    alert("onDeleteClicked! " + args);
-}
+$(function() {
+    $("#tasks-accordion").accordion({collapsible: true});
+});
+

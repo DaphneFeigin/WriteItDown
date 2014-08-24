@@ -1,7 +1,6 @@
 extends layout
 
 block head-javascripts
-  script(src='/javascripts/monkeys.js')
 
 block content
   div.tasklist-div
@@ -11,9 +10,14 @@ block content
       | New Task
       input.input-element(type='text', name='newTask')
       input.input-element(type='submit', value='Submit')
-     ul
+    div#tasks-accordion
       each task in taskList
-        li.task-list-item #{task.name}
+        h3 #{task.name}
+        div
+          p details here
   a(href='/') Home
+  
+block body-javascripts
+  script(src='/javascripts/monkeys.js')
       
 
