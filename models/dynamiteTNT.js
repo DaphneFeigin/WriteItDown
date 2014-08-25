@@ -166,6 +166,10 @@ module.exports = {
           itemModel = {}
           itemModel.id = item.TaskId.S;
           itemModel.name = item.TaskTitle.S;
+          itemModel.dateDue = new Date(parseInt(item.TimeDue.N));
+          console.log(item.TimeDue.N);
+          console.log(itemModel.dateDue);
+          itemModel.dateDueFriendly = itemModel.dateDue.toDateString();
           if (item.Notes) {
             itemModel.notes = item.Notes.S;
           }

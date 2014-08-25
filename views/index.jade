@@ -12,7 +12,9 @@ block content
       input.input-element(type='submit', value='Submit')
     div#tasks-accordion
       each task in taskList
-        h3 #{task.name}
+        div.task-header
+          .task-name #{task.name}
+          .task-due-date #{task.dateDueFriendly}
         div
           p #{task.notes}
   a(href='/') Home

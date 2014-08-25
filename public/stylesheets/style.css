@@ -25,3 +25,15 @@ a {
 .task-list-item{
   margin-bottom: 5px;
 }
+
+.task-header {
+  height: 1em
+}
+
+.task-name {
+  float: left;
+}
+
+.task-due-date {
+  float: right;
+}
