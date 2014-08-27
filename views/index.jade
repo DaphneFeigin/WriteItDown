@@ -6,10 +6,7 @@ block content
   div.tasklist-div.ui-widget
     div(style='text-align: left')
       h2 This is my list!
-    form(action='create', method='get')
-      | New Task
-      input.input-element(type='text', name='newTask')
-      input.input-element(type='submit', value='Submit')
+    button#create-new-task New
     div#tasks-accordion
       each task in taskList
         div.task-header
@@ -18,6 +15,15 @@ block content
         div
           p #{task.notes}
   a(href='/') Home
+  div#create-new-task-dialog(title='New task')
+    form
+      fieldset
+        label(for='title') Title (required)
+        input(type='text', name='title', required)
+        label(for='dateDue') Due date (required)
+        input#due-date-picker(name='dateDue', required)
+        label(for='notes') Notes
+        textarea(name='notes')
   
 block body-javascripts
   script(src='/javascripts/monkeys.js')
