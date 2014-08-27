@@ -13,6 +13,7 @@ AWS.config.loadFromPath('./creds.aws');
 var dynamoDB = new AWS.DynamoDB();
 
 var tableName = 'WriteItDown';
+var indexByTimeDue = 'TimeDue-index';
 var indexByTitle = 'TaskTitle-index';
 
 function findTaskByTitle(ownerId, taskTitle, callback) {
@@ -148,6 +149,7 @@ module.exports = {
   queryTasksForOwner: function(ownerId, callback) {
     var queryParams = {
       TableName: tableName,
+      IndexName: indexByTimeDue,
       Select: 'ALL_ATTRIBUTES',
       KeyConditions: {
         OwnerId: {
