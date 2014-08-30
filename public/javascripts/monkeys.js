@@ -7,14 +7,29 @@ $(function() {
         buttons: {
             "Create": function() {
                 if (createNewTaskForm.checkValidity()) {
-                    createNewTaskForm.submit();
+                    $.ajax({
+                        url: "/tasks/new",
+                        data: {
+                            name: $('#new-task-title').val(),
+                            dateDue: $('#new-task-due-date-picker').val(),
+                            notes: $('#new-task-notes').val()
+                        },
+                        dataType: "json",
+                        type: "POST",
+                        success: function(data, textStatus, jqxhr) {
+                            location = location;
+                        },
+                        error: function(jqxhr, textStatus, errorThrown) {
+                            alert("error " + textStatus + " : " + errorThrown);
+                        }
+                    });
                 }
             },
             Cancel: function() {
                 createNewTaskForm.reset();
                 createNewTaskDialog.dialog('close');
             }
-        }
+        },
     });
     
     var createNewTaskForm = createNewTaskDialog.find('form')[0];
@@ -29,7 +44,7 @@ $(function() {
             createNewTaskDialog.dialog('open');
         });
         
-    $("#due-date-picker").datepicker({
+    $("#new-task-due-date-picker").datepicker({
         constrainInput: true,
         minDate: new Date()
     });

@@ -16,14 +16,14 @@ block content
           p #{task.notes}
   a(href='/') Home
   div#create-new-task-dialog(title='New task')
-    form
+    form#create-new-task-form
       fieldset
         label(for='title') Title (required)
-        input(type='text', name='title', required)
+        input#new-task-title(type='text', name='title', required)
         label(for='dateDue') Due date (required)
-        input#due-date-picker(name='dateDue', required)
+        input#new-task-due-date-picker(name='dateDue', required)
         label(for='notes') Notes
-        textarea(name='notes')
+        textarea#new-task-notes(name='notes')
   
 block body-javascripts
   script(src='/javascripts/monkeys.js')

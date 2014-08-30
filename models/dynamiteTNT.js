@@ -50,55 +50,74 @@ function findTaskByTitle(ownerId, taskTitle, callback) {
     });    
 }
 
-function createNewTask(ownerId, newTaskTitle, callback) {
+
+function itemModelFromDbItem(item) {
+    itemModel = {}
+    itemModel.ownerId = item.OwnerId.S;
+    itemModel.id = item.TaskId.S;
+    itemModel.name = item.TaskTitle.S;
+    itemModel.dateDue = new Date(parseInt(item.TimeDue.N));
+    itemModel.dateDueFriendly = itemModel.dateDue.toDateString();
+    if (item.Notes) {
+      itemModel.notes = item.Notes.S;
+    }
+    return itemModel;
+}
+
+function newDbItemFromItemModel(itemModel) {
     var taskId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
         return v.toString(16);
     });
     var now = new Date();
-    var sevenDaysFromNow = new Date();
-    sevenDaysFromNow.setDate(now.getDate() + 7);
-    var putParams = {
-      TableName: tableName,
-      Item: {
+    var dateDue = new Date(itemModel.dateDue);
+    var dbItem = {
         OwnerId: {
-          S: ownerId
+          S: itemModel.ownerId
         },
         TaskId: {
           S: taskId
         },
         TaskTitle: {
-          S: newTaskTitle
+          S: itemModel.name
         },
         TimeCreated: {
           N: now.getTime().toString()
         },
         TimeDue: {
-          N: sevenDaysFromNow.getTime().toString()
-        },
-      },
+          N: dateDue.getTime().toString()
+        }
     };
-    dynamoDB.putItem(putParams, function(err, data) {
-      if (err) {
-        console.error(err, err.stack);
-      } else {
-        console.log("PutItem " + data);
-        
-        callback(err);
-      }
-    });        
+    if (itemModel.notes && itemModel.notes.length > 0) {
+        dbItem.Notes = {
+            S: itemModel.notes
+        };
+    }
+    return dbItem;
 }
 
 module.exports = {
-  
-  putNewTask: function(ownerId, newTaskTitle, callback) {
-    findTaskByTitle(ownerId, newTaskTitle, function(err, items) {
+    
+  createNewTask: function(ownerId, itemModel, callback) {
+    findTaskByTitle(ownerId, itemModel.name, function(err, items) {
         if (items && (items.length > 0)) {
-            console.log(newTaskTitle + " already exists");
-            callback(null);     
+            err = itemModel.name + " already exists";
+            console.log(err);
+            callback(err);
         } else {
-            createNewTask(ownerId, newTaskTitle, function(err) {
-                callback(err);
+            itemModel.ownerId = ownerId;
+            var dbItem = newDbItemFromItemModel(itemModel);
+            var putParams = {
+                TableName: tableName,
+                Item: dbItem
+            };
+            dynamoDB.putItem(putParams, function(err, data) {
+               if (err) {
+                console.error(err, err.stack);
+               } else {
+                console.log("PutItem " + data);
+               }
+               callback(err, data);
             });
         }
     });
@@ -165,15 +184,7 @@ module.exports = {
     };
     dynamoDB.query(queryParams, function(err, data) {
         tasks = data.Items.map(function(item) {
-          itemModel = {}
-          itemModel.id = item.TaskId.S;
-          itemModel.name = item.TaskTitle.S;
-          itemModel.dateDue = new Date(parseInt(item.TimeDue.N));
-          itemModel.dateDueFriendly = itemModel.dateDue.toDateString();
-          if (item.Notes) {
-            itemModel.notes = item.Notes.S;
-          }
-          return itemModel;
+            return itemModelFromDbItem(item);
         });
         callback(err, tasks);
     });

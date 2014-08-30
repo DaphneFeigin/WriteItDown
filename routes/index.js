@@ -12,7 +12,7 @@ function displayAllTasks(ownerId, res) {
       console.err(err, err.stack);
     }
     
-    console.log('There are ' + tasks.length + ' tasks');
+    console.log('Tasks ' + JSON.stringify(tasks));
     
     res.render('index', {
       title: 'WriteItDown',
@@ -26,13 +26,18 @@ router.get('/', function(req, res) {
   displayAllTasks(clownie, res);
 });
 
-router.get('/create', function(req, res) {
-  dynamiteTNT.putNewTask(clownie, req.query.newTask, function(err) {
+router.post('/tasks/new', function(req, res) {
+  console.log(JSON.stringify(req.body));
+  itemModel = req.body;
+  dynamiteTNT.createNewTask(clownie, itemModel, function(err, newTask) {
     if (err) {
-      console.err(err, err.stack);
+      console.error(err, err.stack);
+      res.status(500).send(err);
+    } else {
+      console.log("New task created: " + JSON.stringify(newTask));
+      res.json(newTask);
     }
-    displayAllTasks(clownie, res);
-  })
+  });
 });
 
 router.get('/delete', function(req, res) {
