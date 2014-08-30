@@ -51,6 +51,10 @@ label {
   width: 35%;
 }
 
+.task-notes {
+  width: 100%;
+}
+
 button.task-check-complete {
   float: right;
 }

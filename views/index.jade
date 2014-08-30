@@ -14,7 +14,7 @@ block content
           .task-due-date #{task.dateDueFriendly}
           button.task-check-complete
         div
-          p #{task.notes}
+          textarea.task-notes #{task.notes}
   a(href='/') Home
   div#create-new-task-dialog(title='New task')
     form#create-new-task-form
