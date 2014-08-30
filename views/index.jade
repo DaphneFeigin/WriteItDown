@@ -12,6 +12,7 @@ block content
         div.task-header
           .task-name #{task.name}
           .task-due-date #{task.dateDueFriendly}
+          button.task-check-complete
         div
           p #{task.notes}
   a(href='/') Home
@@ -19,7 +20,7 @@ block content
     form#create-new-task-form
       fieldset
         label(for='title') Title (required)
-        input#new-task-title(type='text', name='title', required)
+        input#new-task-title(type='text', name='title', maxlength='25', required)
         label(for='dateDue') Due date (required)
         input#new-task-due-date-picker(name='dateDue', required)
         label(for='notes') Notes

@@ -18,7 +18,7 @@ label {
 .tasklist-div {
   margin-left: auto;
   margin-right: auto;
-  width: 400px;
+  width: 500px;
   padding-bottom: 50px;
   padding-top: 0px;
   text-align: left;
@@ -35,13 +35,24 @@ label {
 }
 
 .task-header {
-  height: 1em
+  height: auto;
+  overflow: hidden;
+  display: inline-block;
 }
 
 .task-name {
   float: left;
+  width: 55%;
 }
 
 .task-due-date {
+  float: left;
+  text-align: right;
+  width: 35%;
+}
+
+button.task-check-complete {
   float: right;
 }
+
+
