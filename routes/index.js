@@ -9,7 +9,7 @@ function displayAllTasks(ownerId, res) {
   // Query all items and show them
   dynamiteTNT.queryTasksForOwner(ownerId, function(err, tasks) {
     if (err) {
-      console.err(err, err.stack);
+      console.error(err, err.stack);
     }
     
     console.log('Tasks ' + JSON.stringify(tasks));

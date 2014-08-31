@@ -63,7 +63,6 @@ $(function() {
         text: false
     }).click(function(event){
         var taskId = $(this).parent('[task-id]').attr('task-id');
-        
         $.ajax({
             url: "/tasks/" + taskId,
             data: {

@@ -13,7 +13,7 @@ AWS.config.loadFromPath('./creds.aws');
 var dynamoDB = new AWS.DynamoDB();
 
 var tableName = 'WriteItDown';
-var indexByTimeDue = 'TimeDue-index';
+var indexByIsComplete = 'IsComplete-index';
 var indexByTitle = 'TaskTitle-index';
 
 function findTaskByTitle(ownerId, taskTitle, callback) {
@@ -55,6 +55,7 @@ function itemModelFromDbItem(item) {
     itemModel = {};
     itemModel.ownerId = item.OwnerId.S;
     itemModel.id = item.TaskId.S;
+    itemModel.isComplete = (item.IsComplete.N == '1');
     itemModel.name = item.TaskTitle.S;
     itemModel.dateDue = new Date(parseInt(item.TimeDue.N));
     itemModel.dateDueFriendly = itemModel.dateDue.toDateString();
@@ -81,18 +82,13 @@ function dbAttributeUpdatesFromItemModel(itemModel) {
         }
     }
     if ('isComplete' in itemModel) {
-        if (itemModel.isComplete) {
-            dbAttrUpdates.IsComplete = {
-                Action: 'PUT',
-                Value: {
-                    N: "1"
-                }
-            };
-        } else {
-            dbAttrUpdates.IsComplete = {
-                Action: 'DELETE'
-            };
-        }
+        var isCompleteVal = itemModel.isComplete ? '1' : '0';
+        dbAttrUpdates.IsComplete = {
+            Action: 'PUT',
+            Value: {
+                N: isCompleteVal
+            }
+        };
     }
     return dbAttrUpdates;
 }
@@ -110,6 +106,9 @@ function newDbItemFromItemModel(itemModel) {
         },
         TaskId: {
           S: taskId
+        },
+        IsComplete: {
+          N: '0'
         },
         TaskTitle: {
           S: itemModel.name
@@ -225,27 +224,37 @@ module.exports = {
   queryTasksForOwner: function(ownerId, callback) {
     var queryParams = {
       TableName: tableName,
-      IndexName: indexByTimeDue,
+      IndexName: indexByIsComplete,
       Select: 'ALL_ATTRIBUTES',
       KeyConditions: {
         OwnerId: {
-          ComparisonOperator: 'EQ',
-          AttributeValueList: [
-            {
-              S: ownerId
-            }
-          ]
+            ComparisonOperator: 'EQ',
+            AttributeValueList: [
+                {
+                    S: ownerId
+                }
+            ]
+        },
+        IsComplete: {
+            ComparisonOperator: 'EQ',
+            AttributeValueList: [
+                {
+                    N: '0'
+                }
+            ]
         }
       },
       ConsistentRead: true
     };
+    console.log("request: " + JSON.stringify(queryParams));
     dynamoDB.query(queryParams, function(err, data) {
-        dbTasks = data.Items.filter(function(dbTask){
-            return !('IsComplete' in dbTask);
-        });
-        tasks = dbTasks.map(function(item) {
-            return itemModelFromDbItem(item);
-        });
+        console.log(JSON.stringify(data));
+        var tasks = [];
+        if (!err) {
+            tasks = data.Items.map(function(item) {
+                return itemModelFromDbItem(item);
+            });
+        }
         callback(err, tasks);
     });
   }
