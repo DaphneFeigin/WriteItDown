@@ -1,5 +1,7 @@
 $(function() {
-    $("#tasks-accordion").accordion({collapsible: true});
+    $("#tasks-accordion").accordion({
+        collapsible: true
+    });
     
     var createNewTaskDialog = $('#create-new-task-dialog').dialog({
         autoOpen: false,
@@ -59,6 +61,27 @@ $(function() {
             primary: 'ui-icon-check'
         },
         text: false
+    }).click(function(event){
+        var taskId = $(this).parent('[task-id]').attr('task-id');
+        
+        $.ajax({
+            url: "/tasks/" + taskId,
+            data: {
+                isComplete: true
+            },
+            dataType: "json",
+            type: "POST",
+            success: function() {
+                /*
+                var selector = "[task-id=" + taskId + "]";
+                $(selector).hide('slow');
+                $(selector).hide('slow', function() {
+                    $(selector).hide('slow'); 
+                });
+                */
+                location = location;
+            }
+        });
     });
 
     $("#new-task-due-date-picker").datepicker({

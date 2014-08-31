@@ -80,6 +80,20 @@ function dbAttributeUpdatesFromItemModel(itemModel) {
             };
         }
     }
+    if ('isComplete' in itemModel) {
+        if (itemModel.isComplete) {
+            dbAttrUpdates.IsComplete = {
+                Action: 'PUT',
+                Value: {
+                    N: "1"
+                }
+            };
+        } else {
+            dbAttrUpdates.IsComplete = {
+                Action: 'DELETE'
+            };
+        }
+    }
     return dbAttrUpdates;
 }
 
@@ -226,7 +240,10 @@ module.exports = {
       ConsistentRead: true
     };
     dynamoDB.query(queryParams, function(err, data) {
-        tasks = data.Items.map(function(item) {
+        dbTasks = data.Items.filter(function(dbTask){
+            return !('IsComplete' in dbTask);
+        });
+        tasks = dbTasks.map(function(item) {
             return itemModelFromDbItem(item);
         });
         callback(err, tasks);
