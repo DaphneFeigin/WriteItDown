@@ -52,7 +52,7 @@ function findTaskByTitle(ownerId, taskTitle, callback) {
 
 
 function itemModelFromDbItem(item) {
-    itemModel = {}
+    itemModel = {};
     itemModel.ownerId = item.OwnerId.S;
     itemModel.id = item.TaskId.S;
     itemModel.name = item.TaskTitle.S;
@@ -62,6 +62,25 @@ function itemModelFromDbItem(item) {
       itemModel.notes = item.Notes.S;
     }
     return itemModel;
+}
+
+function dbAttributeUpdatesFromItemModel(itemModel) {
+    var dbAttrUpdates = {}
+    if ('notes' in itemModel) {
+        if (itemModel.notes.length > 0) {
+            dbAttrUpdates.Notes = {
+                Action: 'PUT',
+                Value: {
+                    S: itemModel.notes
+                }
+            };
+        } else {
+            dbAttrUpdates.Notes = {
+                Action: 'DELETE'
+            };
+        }
+    }
+    return dbAttrUpdates;
 }
 
 function newDbItemFromItemModel(itemModel) {
@@ -120,6 +139,30 @@ module.exports = {
                callback(err, data);
             });
         }
+    });
+  },
+  
+  updateTask: function(ownerId, taskId, itemModel, callback) {
+    var dbAttrUpdates = dbAttributeUpdatesFromItemModel(itemModel);
+    var updateParams = {
+        TableName: tableName,
+        Key: {
+            OwnerId: {
+                S: ownerId
+            },
+            TaskId: {
+                S: taskId
+            }
+        },
+        AttributeUpdates: dbAttrUpdates,
+        ReturnValues: 'ALL_NEW'
+    };
+    console.log("updateItem " + JSON.stringify(updateParams));
+    dynamoDB.updateItem(updateParams, function(err, data) {
+        if (err) {
+         console.error(err, err.stack);
+        }
+        callback(err, data);        
     });
   },
   

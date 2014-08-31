@@ -26,6 +26,19 @@ router.get('/', function(req, res) {
   displayAllTasks(clownie, res);
 });
 
+router.param('taskid', function(req, res, next, id) {
+  match = id.match(/^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}$/);
+  if (match) {
+    req.taskId = id;
+    console.log("param taskId=" + req.taskId);
+    next();
+  } else {
+    var errString = "Mismatched taskId " + id;
+    console.error(errString);
+    next(new Error(errString));
+  }
+});
+
 router.post('/tasks/new', function(req, res) {
   console.log(JSON.stringify(req.body));
   itemModel = req.body;
@@ -36,6 +49,20 @@ router.post('/tasks/new', function(req, res) {
     } else {
       console.log("New task created: " + JSON.stringify(newTask));
       res.json(newTask);
+    }
+  });
+});
+
+router.post('/tasks/:taskid', function(req, res){
+  console.log(JSON.stringify(req.body));
+  itemModel = req.body;
+  dynamiteTNT.updateTask(clownie, req.params.taskid, itemModel, function(err, updatedTask) {
+    if (err) {
+      console.error(err, err.stack);
+      res.status(500).send(err);
+    } else {
+      console.log("Updated task: " + JSON.stringify(updatedTask));
+      res.json(updatedTask);
     }
   });
 });
