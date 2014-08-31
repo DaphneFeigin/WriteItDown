@@ -251,7 +251,12 @@ module.exports = {
         console.log(JSON.stringify(data));
         var tasks = [];
         if (!err) {
-            tasks = data.Items.map(function(item) {
+            dbItemsSorted = data.Items.sort(function(a, b) {
+               var aTimeDue = parseInt(a.TimeDue.N);
+               var bTimeDue = parseInt(b.TimeDue.N);
+               return aTimeDue - bTimeDue;
+            });
+            tasks = dbItemsSorted.map(function(item) {
                 return itemModelFromDbItem(item);
             });
         }
