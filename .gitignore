@@ -1,6 +1,7 @@
 # WriteItDown ignores
 creds.aws
 npm-debug.log
+release
 
 # Standard Node .gitignore
 
