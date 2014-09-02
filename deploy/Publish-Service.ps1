@@ -1,5 +1,6 @@
 $sourceDir = "C:\Users\Becky\Documents\GitHub\WriteItDown"
 $tmpZip = "C:\temp\tmp.zip"
+$s3Bucket = "s3://WriteItDown/latest.zip"
 
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
@@ -10,3 +11,9 @@ if (Test-Path $tmpZip) {
 }
 [System.IO.Compression.ZipFile]::CreateFromDirectory($sourceDir, $tmpZip, $compressionLevel, $false)
 Write-Output "Done zipping $tmpZip"
+
+Write-Output "Copying $tmpZip to $s3Bucket..."
+& aws s3 cp $tmpZip $s3Bucket
+Write-Output "Done copying to $s3Bucket"
+
+
