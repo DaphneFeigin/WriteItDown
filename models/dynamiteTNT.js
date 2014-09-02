@@ -131,27 +131,19 @@ function newDbItemFromItemModel(itemModel) {
 module.exports = {
     
   createNewTask: function(ownerId, itemModel, callback) {
-    findTaskByTitle(ownerId, itemModel.name, function(err, items) {
-        if (items && (items.length > 0)) {
-            err = itemModel.name + " already exists";
-            console.log(err);
-            callback(err);
-        } else {
-            itemModel.ownerId = ownerId;
-            var dbItem = newDbItemFromItemModel(itemModel);
-            var putParams = {
-                TableName: tableName,
-                Item: dbItem
-            };
-            dynamoDB.putItem(putParams, function(err, data) {
-               if (err) {
-                console.error(err, err.stack);
-               } else {
-                console.log("PutItem " + data);
-               }
-               callback(err, data);
-            });
-        }
+    itemModel.ownerId = ownerId;
+    var dbItem = newDbItemFromItemModel(itemModel);
+    var putParams = {
+        TableName: tableName,
+        Item: dbItem
+    };
+    dynamoDB.putItem(putParams, function(err, data) {
+       if (err) {
+        console.error(err, err.stack);
+       } else {
+        console.log("PutItem " + data);
+       }
+       callback(err, data);
     });
   },
   
