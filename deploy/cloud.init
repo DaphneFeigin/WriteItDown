@@ -1,0 +1,4 @@
+#cloud-config
+
+runcmd:
+ - echo "foo!" > /home/ec2-user/foo.txt
