@@ -2,3 +2,13 @@
 
 runcmd:
  - echo "foo!" > /home/ec2-user/foo.txt
+ - aws s3 cp s3://WriteItDown/latest.zip /tmp/latest.zip
+ - unzip /tmp/latest.zip -d /home/ec2-user
+ - sudo yum -y install http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+ - sudo yum -y install nodejs npm --enablerepo=epel
+ - cd /home/ec2-user
+ - npm start
+ - echo "done!" > /home/ec2-user/done.txt
+ 
+ 
+
