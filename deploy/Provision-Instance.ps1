@@ -1,7 +1,7 @@
 $ami = "ami-76817c1e"
 $subnetId = "subnet-f88472a1"
 $sgId = "sg-fa82dc9f"
-$keyName = "MIKE_inst"
+$keyName = "$env:COMPUTERNAME" + "_inst"
 $instanceProfileArn = "arn:aws:iam::516893983603:instance-profile/WriteItDownService" 
 $scriptPath = Split-Path $MyInvocation.MyCommand.Path
 $cloudInitFile = Join-Path $scriptPath "cloud.init"
