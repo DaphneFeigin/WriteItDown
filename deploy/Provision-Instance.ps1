@@ -1,4 +1,4 @@
-$ami = "ami-dae340b2"
+$ami = "ami-76817c1e"
 $subnetId = "subnet-f88472a1"
 $sgId = "sg-fa82dc9f"
 $keyName = "$env:COMPUTERNAME" + "_inst"
