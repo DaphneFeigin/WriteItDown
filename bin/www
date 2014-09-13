@@ -2,8 +2,23 @@
 var debug = require('debug')('TaskWebsite');
 var app = require('../app');
 
+var log = require('npmlog');
+if (process.env.npm_package_config_logging == 'FILE') {
+  var fs = require('fs');
+  var logFile = process.env.npm_package_config_logFile + ".log"
+  log.info("Logging to " + logFile);
+  var logStream = fs.createWriteStream(logFile, { flags: 'a' });
+  log.stream = logStream;
+}
+
 app.set('port', process.env.npm_package_config_port);
 
 var server = app.listen(app.get('port'), function() {
-  console.log('Express server listening on port ' + server.address().port);
+  log.info('Express server listening on port ' + server.address().port);
 });
+
+process.on('uncaughtException', function(err) {
+  var errorMessage = "UNCAUGHT EXCEPTION: " + err.message;
+  log.error(errorMessage);
+  console.error(errorMessage);
+})

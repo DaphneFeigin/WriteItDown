@@ -2,6 +2,8 @@
 
 var AWS = require('aws-sdk');
 
+var log = require('npmlog');
+
 // creds.aws is expected in the root directory and looks like this:
 //{
 //  "accessKeyId":"YOUR_ACCESS_KEY_ID",
@@ -43,7 +45,7 @@ function findTaskByTitle(ownerId, taskTitle, callback) {
     };
     dynamoDB.query(queryParams, function(err, data) {
         if (err) {
-            console.error(err, err.stack);
+            log.error(err, err.stack);
         }
         tasks = data ? data.Items : null;
         callback(err, tasks);
@@ -139,9 +141,9 @@ module.exports = {
     };
     dynamoDB.putItem(putParams, function(err, data) {
        if (err) {
-        console.error(err, err.stack);
+        log.error(err, err.stack);
        } else {
-        console.log("PutItem " + data);
+        log.info("PutItem " + data);
        }
        callback(err, data);
     });
@@ -162,10 +164,10 @@ module.exports = {
         AttributeUpdates: dbAttrUpdates,
         ReturnValues: 'ALL_NEW'
     };
-    console.log("updateItem " + JSON.stringify(updateParams));
+    log.info("updateItem " + JSON.stringify(updateParams));
     dynamoDB.updateItem(updateParams, function(err, data) {
         if (err) {
-         console.error(err, err.stack);
+         log.error(err, err.stack);
         }
         callback(err, data);        
     });
@@ -208,7 +210,7 @@ module.exports = {
     };
     batchWriteParams.RequestItems[tableName] = writeRequests;
     dynamoDB.batchWriteItem(batchWriteParams, function(err) {
-        if (err) console.error(err, err.stack);
+        if (err) log.error(err, err.stack);
         callback(err);
     });
   },
@@ -238,9 +240,9 @@ module.exports = {
       },
       ConsistentRead: true
     };
-    console.log("request: " + JSON.stringify(queryParams));
+    log.info("request: " + JSON.stringify(queryParams));
     dynamoDB.query(queryParams, function(err, data) {
-        console.log(JSON.stringify(data));
+        log.info(JSON.stringify(data));
         var tasks = [];
         if (!err) {
             dbItemsSorted = data.Items.sort(function(a, b) {

@@ -6,7 +6,9 @@
     "start": "node ./bin/www"
   },
   "config": {
-    "port": 80
+    "port": 80,
+    "logging": "FILE",
+    "logFile": "/var/log/WriteItDown"
   },
   "dependencies": {
     "express": "~4.2.0",
