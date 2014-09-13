@@ -15,6 +15,8 @@ var log = require('npmlog');
 if (process.env.npm_package_config_awsCreds) {
     log.info("Using credentials at " + process.env.npm_package_config_awsCreds);
     AWS.config.loadFromPath(process.env.npm_package_config_awsCreds);
+} else {
+    AWS.config.update({region: 'us-east-1'});
 }
 
 var dynamoDB = new AWS.DynamoDB();
