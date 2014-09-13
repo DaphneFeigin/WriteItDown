@@ -5,6 +5,9 @@
   "scripts": {
     "start": "node ./bin/www"
   },
+  "config": {
+    "port": 80
+  },
   "dependencies": {
     "express": "~4.2.0",
     "static-favicon": "~1.0.0",

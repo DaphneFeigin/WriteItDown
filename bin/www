@@ -2,8 +2,8 @@
 var debug = require('debug')('TaskWebsite');
 var app = require('../app');
 
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.npm_package_config_port);
 
 var server = app.listen(app.get('port'), function() {
-  debug('Express server listening on port ' + server.address().port);
+  console.log('Express server listening on port ' + server.address().port);
 });
