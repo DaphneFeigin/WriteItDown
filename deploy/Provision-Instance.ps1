@@ -5,6 +5,8 @@ $keyName = "$env:COMPUTERNAME" + "_inst"
 $instanceProfileArn = "arn:aws:iam::516893983603:instance-profile/WriteItDownService" 
 $scriptPath = Split-Path $MyInvocation.MyCommand.Path
 $cloudInitFile = Join-Path $scriptPath "cloud.init"
+$hostedZoneId = "Z20BYPRBXXH5ZP"
+
 Write-Output "Launching instance with init script $cloudInitFile"
 Get-Content $cloudInitFile
 
@@ -26,3 +28,10 @@ do {
 
 $publicIp = $instanceDesc.Reservations[0].Instances[0].PublicIpAddress
 Write-Output "Running.  Public IP $publicIp"
+
+$changeRecord = "{`"Comment`": `"WriteItDown EC2 instance`", `"Changes`": [{`"Action`":`"UPSERT`", `"ResourceRecordSet`":{`"Name`":`"writeitdown.pisomojado.org`",`"Type`":`"A`",`"TTL`":60,`"ResourceRecords`":[{`"Value`":`"$publicIp`"}]}}]}"
+
+$changeRecordFile = Join-Path $env:TEMP "change-record.json"
+$changeRecord | Out-File -Encoding ASCII $changeRecordFile
+& aws route53 change-resource-record-sets --hosted-zone-id $hostedZoneId --change-batch file://$changeRecordFile
+
