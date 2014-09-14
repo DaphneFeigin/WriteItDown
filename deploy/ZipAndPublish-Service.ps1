@@ -11,5 +11,5 @@ if (Test-Path $tmpZip) {
 [System.IO.Compression.ZipFile]::CreateFromDirectory($sourceDir, $tmpZip, $compressionLevel, $false)
 Write-Output "Done zipping $tmpZip"
 
-& Publish-Service.ps1 $tmpZip
+& .\deploy\Publish-Service.ps1 $tmpZip
 
