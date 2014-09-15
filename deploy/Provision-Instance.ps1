@@ -35,3 +35,4 @@ $changeRecordFile = Join-Path $env:TEMP "change-record.json"
 $changeRecord | Out-File -Encoding ASCII $changeRecordFile
 & aws route53 change-resource-record-sets --hosted-zone-id $hostedZoneId --change-batch file://$changeRecordFile
 
+& ipconfig /flushdns
