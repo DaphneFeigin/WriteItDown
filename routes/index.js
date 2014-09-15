@@ -4,8 +4,22 @@ var router = express.Router();
 var log = require('npmlog');
 
 var dynamiteTNT = require('../models/dynamiteTNT');
+var auth = require('../models/auth');
 
 var clownie = 'clownie';
+
+router.use(function(req, res, next) {
+  auth.authRequest(req, function(err) {
+    if (err) {
+      res.status(401).render('error', {
+        error: { status: 401 },
+        message: err
+      });
+    } else {
+      next();
+    }
+  });
+});
 
 function displayAllTasks(ownerId, res) {
   // Query all items and show them
