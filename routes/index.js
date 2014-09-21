@@ -14,10 +14,11 @@ router.use(function(req, res, next) {
   } else {
     auth.authRequest(req, function(err) {
       if (err) {
-        res.status(401).render('error', {
-          error: { status: 401 },
-          message: err
-        });
+        if (req.path == '/') {
+          res.redirect('/login');
+        } else {
+          res.status(401).send();
+        }
       } else {
         next();
       }
