@@ -90,5 +90,10 @@ router.post('/tasks/:taskid', function(req, res){
   });
 });
 
+router.post('/users/new', function(req, res) {
+  log.info(JSON.stringify(req.body));
+  res.json({});
+});
+
 module.exports = router;
 

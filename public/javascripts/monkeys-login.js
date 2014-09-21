@@ -8,7 +8,22 @@ $(function() {
         } else if (password1.length < 6) {
             error("Password must be at least six characters");
         } else {
-            success();
+            $.ajax({
+                url: '/users/new',
+                data: {
+                    userId: username,
+                    password: password1
+                },
+                dataType: "json",
+                type: "POST",
+                success: function(data, textStatus, jqxhr) {
+                    document.cookie = "userId=" + username;
+                    success();
+                },
+                error: function(jqxhr, textStatus, errorThrown) {
+                    error(textStatus)
+                }
+            });
         }
     }
    
@@ -27,7 +42,7 @@ $(function() {
                 var password2 = $('#signup-password2').val();
                 doSignup(username, password1, password2,
                          function() {
-                            alert(username + " " + password1);
+                            location = '/';
                          },
                          function(errorText) {
                             $('#error-text').text(errorText);
