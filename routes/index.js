@@ -9,21 +9,25 @@ var auth = require('../models/auth');
 var clownie = 'clownie';
 
 router.use(function(req, res, next) {
-  auth.authRequest(req, function(err) {
-    if (err) {
-      res.status(401).render('error', {
-        error: { status: 401 },
-        message: err
-      });
-    } else {
-      next();
-    }
-  });
+  if (req.path == '/login') {
+    next();
+  } else {
+    auth.authRequest(req, function(err) {
+      if (err) {
+        res.status(401).render('error', {
+          error: { status: 401 },
+          message: err
+        });
+      } else {
+        next();
+      }
+    });
+  }
 });
 
-function displayAllTasks(ownerId, res) {
-  // Query all items and show them
-  dynamiteTNT.queryTasksForOwner(ownerId, function(err, tasks) {
+/* GET home page. */
+router.get('/', function(req, res) {
+  dynamiteTNT.queryTasksForOwner(clownie, function(err, tasks) {
     if (err) {
       log.error(err, err.stack);
     }
@@ -35,12 +39,14 @@ function displayAllTasks(ownerId, res) {
       taskList: tasks,
     });
   });  
-}
-
-/* GET home page. */
-router.get('/', function(req, res) {
-  displayAllTasks(clownie, res);
 });
+
+/* GET login page. */
+router.get('/login', function(req, res) {
+  res.render('login', {
+    title: 'Sign into WriteItDown'
+  })
+})
 
 router.param('taskid', function(req, res, next, id) {
   match = id.match(/^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}$/);
@@ -80,18 +86,6 @@ router.post('/tasks/:taskid', function(req, res){
       log.info("Updated task: " + JSON.stringify(updatedTask));
       res.json(updatedTask);
     }
-  });
-});
-
-router.get('/delete', function(req, res) {
-  taskIds = Object.keys(req.query);
-  dynamiteTNT.deleteTasks(clownie, taskIds, function(err) {
-    if (err) {
-      log.error(err, err.stack);
-    } else {
-      log.info("deleted " + taskIds.length + " items");
-    }
-    displayAllTasks(clownie, res);
   });
 });
 

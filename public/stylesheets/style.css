@@ -59,4 +59,8 @@ button.task-check-complete {
   float: right;
 }
 
+.no-close .ui-dialog-titlebar-close {
+display: none;
+}
+
 
