@@ -9,7 +9,8 @@ var auth = require('../models/auth');
 var clownie = 'clownie';
 
 router.use(function(req, res, next) {
-  if (req.path == '/login') {
+  if ((req.path == '/login') ||
+      (req.path == '/users/new')) {
     next();
   } else {
     auth.authRequest(req, function(err) {
@@ -91,8 +92,16 @@ router.post('/tasks/:taskid', function(req, res){
 });
 
 router.post('/users/new', function(req, res) {
-  log.info(JSON.stringify(req.body));
-  res.json({});
+  newUserModel = req.body;
+  auth.createNewUser(newUserModel, function(err, session) {
+    if (err) {
+      log.error(err);
+      res.status(500).send(err);
+    } else {
+      log.info("User " + session.userId);
+      res.json(session);
+    }
+  });
 });
 
 module.exports = router;

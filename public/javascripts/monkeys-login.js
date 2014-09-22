@@ -21,7 +21,7 @@ $(function() {
                     success();
                 },
                 error: function(jqxhr, textStatus, errorThrown) {
-                    error(textStatus)
+                    error(jqxhr.responseText);
                 }
             });
         }
