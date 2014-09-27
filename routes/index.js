@@ -14,21 +14,12 @@ if (typeof String.prototype.startsWith != 'function') {
   };
 }
 
+/*
 router.use(function(req, res, next) {
-  var requiresAuth = true;
-  if (req.path.startsWith('/login') ||
-      req.path.startsWith('/users/new')) {
-    requiresAuth = false;
-  }
-  if (requiresAuth) {
+  if (!(req.path.startsWith('/signin'))) {
     auth.authRequest(req, function(err) {
       if (err) {
-        if (req.path == '/'){
-          log.info("Auth redirect");
-          res.redirect('/login');
-        } else {
-          res.status(401).send();
-        }
+        res.status(401).send();
       } else {
         next();
       }
@@ -37,31 +28,25 @@ router.use(function(req, res, next) {
     next();
   }
 });
+*/
 
 /* GET home page. */
 router.get('/', function(req, res) {
-  dynamiteTNT.queryTasksForOwner(clownie, function(err, tasks) {
-    if (err) {
-      log.error(err, err.stack);
-    }
-    
-    log.info('Tasks ' + JSON.stringify(tasks));
-    
-    res.render('index', {
-      title: 'WriteItDown',
-      taskList: tasks,
-    });
-  });  
+  res.render('index', {
+    title: 'WriteItDown',
+  });
 });
 
 /* GET login page. */
+/*
 router.get('/login', function(req, res) {
   log.info("userId=" + req.query.userId)
   res.render('login', {
     title: 'Sign into WriteItDown',
     userId: req.query.userId
   })
-})
+});
+*/
 
 router.param('taskid', function(req, res, next, id) {
   match = id.match(/^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}$/);
@@ -74,6 +59,26 @@ router.param('taskid', function(req, res, next, id) {
     log.error(errString);
     next(new Error(errString));
   }
+});
+
+router.get('/tasks', function(req, res) {
+  log.info(JSON.stringify(req.headers));
+  log.info("content-type: " + req.get('Content-Type'));
+  dynamiteTNT.queryTasksForOwner(clownie, function(err, tasks) {
+    if (err) {
+      log.error(err, err.stack);
+      res.status(500).send(err);
+    } else {
+      log.info('Tasks ' + JSON.stringify(tasks));
+      if (req.accepts('html')) {
+        res.render('tasklist', {
+          taskList: tasks,
+        });
+      } else {
+        res.json(tasks);
+      }
+    }    
+  });  
 });
 
 router.post('/tasks/new', function(req, res) {

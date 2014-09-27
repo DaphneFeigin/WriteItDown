@@ -1,8 +1,17 @@
 $(function() {
-    $("#tasks-accordion").accordion({
-        collapsible: true
-    });
     
+    $.ajax({
+        url: "/tasks",
+        dataType: "html",
+        type: "GET",
+        success: function(data, textStatus, jqxhr) {
+            $("#task-list").html(data);
+        },
+        error: function(jqxhr, textStatus, errorThrown) {
+            alert("error " + textStatus + " : " + errorThrown);
+        }
+    });
+     
     var createNewTaskDialog = $('#create-new-task-dialog').dialog({
         autoOpen: false,
         modal: true,
@@ -44,45 +53,6 @@ $(function() {
         createNewTaskDialog.dialog('open');
     });
     
-    $(".task-notes-edit").blur(function() {
-       var taskId = $(this).parent('[task-id]').attr('task-id');
-       $.ajax({
-            url: "/tasks/" + taskId,
-            data: {
-                notes: $(this).val()
-            },
-            dataType: "json",
-            type: "POST"
-       });
-    });
-    
-    $("button.task-check-complete").button({
-        icons: {
-            primary: 'ui-icon-check'
-        },
-        text: false
-    }).click(function(event){
-        var taskId = $(this).parent('[task-id]').attr('task-id');
-        $.ajax({
-            url: "/tasks/" + taskId,
-            data: {
-                isComplete: true
-            },
-            dataType: "json",
-            type: "POST",
-            success: function() {
-                /*
-                var selector = "[task-id=" + taskId + "]";
-                $(selector).hide('slow');
-                $(selector).hide('slow', function() {
-                    $(selector).hide('slow'); 
-                });
-                */
-                location = location;
-            }
-        });
-    });
-
     $("#new-task-due-date-picker").datepicker({
         constrainInput: true,
         minDate: new Date()
