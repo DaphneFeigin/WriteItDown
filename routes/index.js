@@ -8,14 +8,23 @@ var auth = require('../models/auth');
 
 var clownie = 'clownie';
 
+if (typeof String.prototype.startsWith != 'function') {
+  String.prototype.startsWith = function (str){
+    return this.slice(0, str.length) == str;
+  };
+}
+
 router.use(function(req, res, next) {
-  if ((req.path == '/login') ||
-      (req.path == '/users/new')) {
-    next();
-  } else {
+  var requiresAuth = true;
+  if (req.path.startsWith('/login') ||
+      req.path.startsWith('/users/new')) {
+    requiresAuth = false;
+  }
+  if (requiresAuth) {
     auth.authRequest(req, function(err) {
       if (err) {
-        if (req.path == '/') {
+        if (req.path == '/'){
+          log.info("Auth redirect");
           res.redirect('/login');
         } else {
           res.status(401).send();
@@ -24,6 +33,8 @@ router.use(function(req, res, next) {
         next();
       }
     });
+  } else {
+    next();
   }
 });
 
@@ -45,8 +56,10 @@ router.get('/', function(req, res) {
 
 /* GET login page. */
 router.get('/login', function(req, res) {
+  log.info("userId=" + req.query.userId)
   res.render('login', {
-    title: 'Sign into WriteItDown'
+    title: 'Sign into WriteItDown',
+    userId: req.query.userId
   })
 })
 

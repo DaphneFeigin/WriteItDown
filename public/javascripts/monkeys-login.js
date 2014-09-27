@@ -27,7 +27,7 @@ $(function() {
         }
     }
    
-    $('#signup-dialog').dialog({
+    $('#signin-dialog').dialog({
         title: 'Sign up',
         autoOpen: true,
         dialogClass: "no-close",
@@ -37,9 +37,9 @@ $(function() {
         buttons: {
             "Sign me up": function() {
                 $('#error-text').hide("fast");
-                var username = $('#signup-username').val();
-                var password1 = $('#signup-password1').val();
-                var password2 = $('#signup-password2').val();
+                var username = $('#signin-username').val();
+                var password1 = $('#signin-password1').val();
+                var password2 = $('#signin-password2').val();
                 doSignup(username, password1, password2,
                          function() {
                             location = '/';
@@ -51,5 +51,15 @@ $(function() {
             }
         }
     });
+    
+    $('#link-to-signup').click(function(e) {
+        e.preventDefault(); 
+        location = '/login'; 
+    });
+    
+    $('#link-to-signin').click(function(e) {
+        e.preventDefault();
+        location = '/login?userId=' + $('#signin-username').val();
+    })
     
 });

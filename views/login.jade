@@ -3,16 +3,21 @@ extends layout
 block head-javascripts
 
 block content
-    div#signup-dialog
+    div#signin-dialog
         p#error-text(style='color: red; display: none')
-        form#signup-form
+        form#signin-form
             fieldset
                 label(for='username') Username
-                input#signup-username(type='text', name='username', maxlength=25, required)
+                input#signin-username(type='text', name='username', maxlength=25, required)= userId
                 label(for='password1') Password
-                input#signup-password1(type='password', name='password1', maxlength=20, required)
-                label(for='password2') Password (again)
-                input#signup-password2(type='password', name='password2', maxlength=20, required)
+                input#signin-password1(type='password', name='password1', maxlength=20, required)
+                unless userId
+                    label(for='password2') Password (again)
+                    input#signin-password2(type='password', name='password2', maxlength=20, required)
+        if userId
+            a(href)#link-to-signup I'm new here
+        else
+            a(href)#link-to-signin I already have an account
 
 block body-javascripts
   script(src='/javascripts/monkeys-login.js')
