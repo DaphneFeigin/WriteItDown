@@ -1,6 +1,16 @@
 $(function() {
     
-    $.ajax({
+    function ajaxWrapper(ajaxObj) {
+        ajaxObj.statusCode = {
+            401: function() {
+                signInDialog.ajaxToRetry = ajaxObj;
+                signInDialog.dialog('open');
+            }
+        }
+        $.ajax(ajaxObj);
+    }
+    
+    ajaxWrapper({
         url: "/tasks",
         dataType: "html",
         type: "GET",
@@ -8,10 +18,43 @@ $(function() {
             $("#task-list").html(data);
         },
         error: function(jqxhr, textStatus, errorThrown) {
-            alert("error " + textStatus + " : " + errorThrown);
+            //alert("error " + textStatus + " : " + errorThrown);
         }
     });
      
+    var signInDialog = $('#signin-dialog').dialog({
+        title: 'Sign in',
+        autoOpen: false,
+        modal: true,
+        dialogClass: "no-close",
+        closeOnEscape: false,
+        draggable: false,
+        resizable: false,
+        buttons: {
+            "Sign in": function() {
+                $('#error-text').hide("fast");
+                var username = $('#signin-username').val();
+                var password1 = $('#signin-password1').val();
+                $.ajax({
+                    url: "/signin",
+                    data: {
+                        userId: username,
+                        password: password1
+                    },
+                    dataType: "json",
+                    type: "POST",
+                    success: function(data, textStatus, jqxhr) {
+                        location = '/';
+                    },
+                    error: function(jqxhr, textStatus, errorThrown) {
+                        $('#error-text').text(jqxhr.responseText);
+                        $('#error-text').show("fast");
+                    }
+                });
+            }   
+        },
+    });
+
     var createNewTaskDialog = $('#create-new-task-dialog').dialog({
         autoOpen: false,
         modal: true,

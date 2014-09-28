@@ -18,6 +18,14 @@ block content
         input#new-task-due-date-picker(name='dateDue', required)
         label(for='notes') Notes
         textarea#new-task-notes(name='notes')
+  div#signin-dialog
+    p#error-text(style='color: red; display: none')
+    form#signin-form
+        fieldset
+            label(for='username') Username
+            input#signin-username(type='text', name='username', maxlength=25, required)
+            label(for='password1') Password
+            input#signin-password1(type='password', name='password1', maxlength=20, required)
   
 block body-javascripts
   script(src='/javascripts/monkeys.js')

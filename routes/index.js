@@ -14,22 +14,6 @@ if (typeof String.prototype.startsWith != 'function') {
   };
 }
 
-/*
-router.use(function(req, res, next) {
-  if (!(req.path.startsWith('/signin'))) {
-    auth.authRequest(req, function(err) {
-      if (err) {
-        res.status(401).send();
-      } else {
-        next();
-      }
-    });
-  } else {
-    next();
-  }
-});
-*/
-
 /* GET home page. */
 router.get('/', function(req, res) {
   res.render('index', {
@@ -37,16 +21,17 @@ router.get('/', function(req, res) {
   });
 });
 
-/* GET login page. */
-/*
-router.get('/login', function(req, res) {
-  log.info("userId=" + req.query.userId)
-  res.render('login', {
-    title: 'Sign into WriteItDown',
-    userId: req.query.userId
-  })
+router.use('/tasks', function(req, res, next) {
+  auth.authRequest(req, function(err) {
+    log.info("auth: " + err);
+    if (err) {
+      res.status(401).send();
+    } else {
+      next();
+    }
+  });
 });
-*/
+
 
 router.param('taskid', function(req, res, next, id) {
   match = id.match(/^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}$/);
@@ -62,8 +47,6 @@ router.param('taskid', function(req, res, next, id) {
 });
 
 router.get('/tasks', function(req, res) {
-  log.info(JSON.stringify(req.headers));
-  log.info("content-type: " + req.get('Content-Type'));
   dynamiteTNT.queryTasksForOwner(clownie, function(err, tasks) {
     if (err) {
       log.error(err, err.stack);
