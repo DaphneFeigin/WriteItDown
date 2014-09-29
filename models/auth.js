@@ -13,6 +13,7 @@ function computeSHA1(password) {
 }
 
 module.exports = {
+    
     authRequest: function(req, callback) {
         if (req.cookies['userId']) {
             callback(null);
@@ -58,7 +59,7 @@ module.exports = {
                 SessionId: { S: "0" }
             },
             ConsistentRead: true,
-            AttributesToGet: [ 'Password' ]
+            AttributesToGet: [ 'Id', 'Password' ]
         };
         dynamoDB.getItem(getParams, function(err, data) {
             if (err) {
@@ -66,7 +67,7 @@ module.exports = {
                 callback("Error signing in; please try again", null);
             } else {
                 if (data.Item && computeSHA1(userModel.password) == data.Item.Password.S) {
-                    callback(null, { userId: userModel.userId });
+                    callback(null, { userId: data.Item.Id.S });
                 } else {
                     callback("Bad username or password", null);
                 }

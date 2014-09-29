@@ -44,6 +44,7 @@ $(function() {
                     dataType: "json",
                     type: "POST",
                     success: function(data, textStatus, jqxhr) {
+                        document.cookie = "userId=" + data.userId;
                         location = '/';
                     },
                     error: function(jqxhr, textStatus, errorThrown) {
