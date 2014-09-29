@@ -62,9 +62,10 @@ module.exports = {
         };
         dynamoDB.getItem(getParams, function(err, data) {
             if (err) {
-                callback(err, null);
+                log.error("signin: " + err);
+                callback("Error signing in; please try again", null);
             } else {
-                if (computeSHA1(userModel.password) == data.Item.Password.S) {
+                if (data.Item && computeSHA1(userModel.password) == data.Item.Password.S) {
                     callback(null, { userId: userModel.userId });
                 } else {
                     callback("Bad username or password", null);

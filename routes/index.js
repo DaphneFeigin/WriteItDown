@@ -21,6 +21,18 @@ router.get('/', function(req, res) {
   });
 });
 
+router.post('/signin', function(req, res) {
+  var userModel = req.body;
+  auth.signInUser(userModel, function(err, session) {
+    if (err) {
+      res.status(401).send(err);
+    } else {
+      log.info("User " + session.userId);
+      res.json(session);
+    }
+  });
+});
+
 router.use('/tasks', function(req, res, next) {
   auth.authRequest(req, function(err) {
     log.info("auth: " + err);
@@ -31,7 +43,6 @@ router.use('/tasks', function(req, res, next) {
     }
   });
 });
-
 
 router.param('taskid', function(req, res, next, id) {
   match = id.match(/^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}$/);
