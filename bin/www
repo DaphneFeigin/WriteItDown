@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 var debug = require('debug')('TaskWebsite');
 var app = require('../app');
-
 var log = require('npmlog');
+var fs = require('fs');
+var http = require('http');
+var https = require('https');
+
 if (process.env.npm_package_config_logging == 'FILE') {
-  var fs = require('fs');
   var logFile = process.env.npm_package_config_logFile + ".log"
   log.info("Logging to " + logFile);
   var logStream = fs.createWriteStream(logFile, { flags: 'a' });
@@ -13,9 +15,19 @@ if (process.env.npm_package_config_logging == 'FILE') {
 
 app.set('port', process.env.npm_package_config_port);
 
-var server = app.listen(app.get('port'), function() {
-  log.info('Express server listening on port ' + server.address().port);
-});
+var ssl_cert_file = process.env.npm_package_config_certFile;
+var ssl_key_file = process.env.npm_package_config_certKeyFile;
+if (ssl_cert_file && ssl_key_file) {
+  var ssl_options = {
+    key: fs.readFileSync(ssl_key_file),
+    cert: fs.readFileSync(ssl_cert_file)
+  };
+  https.createServer(ssl_options, app).listen(app.get('port'));
+  log.info('https on port ' + app.get('port'));
+} else {
+  http.createServer(app).listen(app.get('port'));
+  log.info('http on port ' + app.get('port'));
+}
 
 process.on('uncaughtException', function(err) {
   var errorMessage = "UNCAUGHT EXCEPTION: " + err.message;

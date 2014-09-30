@@ -3,6 +3,10 @@ WriteItDown
 
 To run on a port other than the default 80, e.g. 3000:
  npm config set TaskWebsite:port 3000
+ 
+To use SSL, you must provide a cert and key.  Some instructions on how to create a self-signed cert here: http://docs.nodejitsu.com/articles/HTTP/servers/how-to-create-a-HTTPS-server
+  npm config set TaskWebsite:certFile c:\temp\cert.pem
+  npm config set TaskWebsite:certKeyFile c:\temp\key.pem
 
 AWS credentials are obtained from the EC2 role by default.  To supply those credentials from a file on your machine:
  npm config set TaskWebsite:awsCreds c:\temp\MyCreds.aws
