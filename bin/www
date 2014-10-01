@@ -13,21 +13,24 @@ if (process.env.npm_package_config_logging == 'FILE') {
   log.stream = logStream;
 }
 
-app.set('port', process.env.npm_package_config_port);
+var port = process.env.npm_package_config_port;
 
-var ssl_cert_file = process.env.npm_package_config_certFile;
-var ssl_key_file = process.env.npm_package_config_certKeyFile;
-if (ssl_cert_file && ssl_key_file) {
+if (process.env.npm_package_config_sslDisabled) {
+  app.set('port', port);
+  http.createServer(app).listen(port);
+  log.info('http on port ' + port);
+} else {
+  var ssl_cert_file = process.env.npm_package_config_certFile || '~/selfsigned_cert.pem';
+  var ssl_key_file = process.env.npm_package_config_certKeyFile || '~/selfsigned_key.pem';
   var ssl_options = {
     key: fs.readFileSync(ssl_key_file),
     cert: fs.readFileSync(ssl_cert_file)
   };
-  https.createServer(ssl_options, app).listen(app.get('port'));
-  log.info('https on port ' + app.get('port'));
-} else {
-  http.createServer(app).listen(app.get('port'));
-  log.info('http on port ' + app.get('port'));
+  
+  https.createServer(ssl_options, app).listen(port);
+  log.info('https on port ' + port);
 }
+
 
 process.on('uncaughtException', function(err) {
   var errorMessage = "UNCAUGHT EXCEPTION: " + err.message;

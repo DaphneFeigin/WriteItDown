@@ -6,7 +6,9 @@
     "start": "node ./bin/www"
   },
   "config": {
-    "port": 80,
+    "port": 443,
+    "certFile": "~/selfsigned_cert.pem",
+    "certKeyFile": "~/selfsigned_key.pem",
     "logging": "FILE",
     "logFile": "/var/log/WriteItDown"
   },

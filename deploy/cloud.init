@@ -8,6 +8,8 @@ yum_repos:
 runcmd:
  - aws s3 cp s3://WriteItDown/latest.zip /tmp/latest.zip
  - unzip /tmp/latest.zip -d /home/ec2-user
+ - aws s3 cp s3://WriteItDown/selfsigned_cert.pem /home/ec2-user/selfsigned_cert.pem
+ - aws s3 cp s3://WriteItDown/selfsigned_key.pem /home/ec2-user/selfsigned_key.pem
  - yum -y install nodejs npm --enablerepo=epel
  - cd /home/ec2-user
  - npm start
