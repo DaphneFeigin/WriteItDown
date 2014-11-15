@@ -58,7 +58,7 @@ $(function() {
                 $('#error-text').hide("fast");
                 $('#signin-password2').show("fast");
                 $('#signin-password2-label').show("fast");
-                $(this).dialog('option', 'buttons', [{text: 'Sign in', click: onSignInButton}]);
+                $(this).dialog('option', 'buttons', [{text: 'Sign up', click: onSignInButton}]);
             },
             "Sign in": onSignInButton
         },
