@@ -21,7 +21,30 @@ $(function() {
             //alert("error " + textStatus + " : " + errorThrown);
         }
     });
-     
+    
+    function onSignInButton() {
+        $('#error-text').hide("fast");
+        var username = $('#signin-username').val();
+        var password1 = $('#signin-password1').val();
+        $.ajax({
+            url: "/signin",
+            data: {
+                userId: username,
+                password: password1
+            },
+            dataType: "json",
+            type: "POST",
+            success: function(data, textStatus, jqxhr) {
+                document.cookie = "userId=" + data.userId;
+                location = '/';
+            },
+            error: function(jqxhr, textStatus, errorThrown) {
+                $('#error-text').text(jqxhr.responseText);
+                $('#error-text').show("fast");
+            }
+        });
+    }
+    
     var signInDialog = $('#signin-dialog').dialog({
         title: 'Sign in',
         autoOpen: false,
@@ -31,28 +54,13 @@ $(function() {
         draggable: false,
         resizable: false,
         buttons: {
-            "Sign in": function() {
+            "Sign up": function() {
                 $('#error-text').hide("fast");
-                var username = $('#signin-username').val();
-                var password1 = $('#signin-password1').val();
-                $.ajax({
-                    url: "/signin",
-                    data: {
-                        userId: username,
-                        password: password1
-                    },
-                    dataType: "json",
-                    type: "POST",
-                    success: function(data, textStatus, jqxhr) {
-                        document.cookie = "userId=" + data.userId;
-                        location = '/';
-                    },
-                    error: function(jqxhr, textStatus, errorThrown) {
-                        $('#error-text').text(jqxhr.responseText);
-                        $('#error-text').show("fast");
-                    }
-                });
-            }   
+                $('#signin-password2').show("fast");
+                $('#signin-password2-label').show("fast");
+                $(this).dialog('option', 'buttons', [{text: 'Sign in', click: onSignInButton}]);
+            },
+            "Sign in": onSignInButton
         },
     });
 

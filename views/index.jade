@@ -26,6 +26,8 @@ block content
             input#signin-username(type='text', name='username', maxlength=25, required)
             label(for='password1') Password
             input#signin-password1(type='password', name='password1', maxlength=20, required)
+            label#signin-password2-label(style='display: none', for='password2') Password (again)
+            input#signin-password2(style='display: none', type='password', name='password2', maxlength=20, required)
   
 block body-javascripts
   script(src='/javascripts/monkeys.js')
