@@ -45,6 +45,16 @@ $(function() {
         });
     }
     
+    function onSignUpButton() {
+        $('#error-text').hide("fast");
+        var password1 = $('#signin-password1').val();
+        var password2 = $('#signin-password2').val();
+        if (password1 != password2) {
+            $('#error-text').text("passwords must match");
+            $('#error-text').show("fast");
+        }
+    }
+    
     var signInDialog = $('#signin-dialog').dialog({
         title: 'Sign in',
         autoOpen: false,
@@ -58,7 +68,7 @@ $(function() {
                 $('#error-text').hide("fast");
                 $('#signin-password2').show("fast");
                 $('#signin-password2-label').show("fast");
-                $(this).dialog('option', 'buttons', [{text: 'Sign up', click: onSignInButton}]);
+                $(this).dialog('option', 'buttons', [{text: 'Sign up', click: onSignUpButton}]);
             },
             "Sign in": onSignInButton
         },
