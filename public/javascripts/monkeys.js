@@ -22,68 +22,6 @@ $(function() {
         }
     });
     
-    function showSignInError(errorText) {
-        $('#signin-error-text').text(errorText);
-        $('#signin-error-text').show("fast");        
-    }
-    
-    function onSignInButton() {
-        $('#signin-error-text').hide("fast");
-        var username = $('#signin-username').val();
-        var password1 = $('#signin-password1').val();
-        $.ajax({
-            url: "/signin",
-            data: {
-                userId: username,
-                password: password1
-            },
-            dataType: "json",
-            type: "POST",
-            success: function(data, textStatus, jqxhr) {
-                document.cookie = "userId=" + data.userId;
-                location = '/';
-            },
-            error: function(jqxhr, textStatus, errorThrown) {
-                showSignInError(jqxhr.responseText);
-            }
-        });
-    }
-    
-    function onSignUpButton() {
-        $('#signin-error-text').hide("fast");
-        var username = $('#signin-username').val();
-        var password1 = $('#signin-password1').val();
-        var password2 = $('#signin-password2').val();
-        if (username.length === 0) {
-            showSignInError("please specify a username");
-        } else if (password1.length < 6) {
-            showSignInError("password must be at least 6 characters long");
-        } else if (password1 != password2) {
-            showSignInError("passwords must match");
-        } else {
-            alert("coming soon!!");  
-        }
-    }
-    
-    var signInDialog = $('#signin-dialog').dialog({
-        title: 'Sign in',
-        autoOpen: false,
-        modal: true,
-        dialogClass: "no-close",
-        closeOnEscape: false,
-        draggable: false,
-        resizable: false,
-        buttons: {
-            "Sign up": function() {
-                $('#signin-error-text').hide("fast");
-                $('#signin-password2').show("fast");
-                $('#signin-password2-label').show("fast");
-                $(this).dialog('option', 'buttons', [{text: 'Sign up', click: onSignUpButton}]);
-            },
-            "Sign in": onSignInButton
-        },
-    });
-
     var createNewTaskDialog = $('#create-new-task-dialog').dialog({
         autoOpen: false,
         modal: true,
