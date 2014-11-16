@@ -22,8 +22,13 @@ $(function() {
         }
     });
     
+    function showSignInError(errorText) {
+        $('#signin-error-text').text(errorText);
+        $('#signin-error-text').show("fast");        
+    }
+    
     function onSignInButton() {
-        $('#error-text').hide("fast");
+        $('#signin-error-text').hide("fast");
         var username = $('#signin-username').val();
         var password1 = $('#signin-password1').val();
         $.ajax({
@@ -39,19 +44,24 @@ $(function() {
                 location = '/';
             },
             error: function(jqxhr, textStatus, errorThrown) {
-                $('#error-text').text(jqxhr.responseText);
-                $('#error-text').show("fast");
+                showSignInError(jqxhr.responseText);
             }
         });
     }
     
     function onSignUpButton() {
-        $('#error-text').hide("fast");
+        $('#signin-error-text').hide("fast");
+        var username = $('#signin-username').val();
         var password1 = $('#signin-password1').val();
         var password2 = $('#signin-password2').val();
-        if (password1 != password2) {
-            $('#error-text').text("passwords must match");
-            $('#error-text').show("fast");
+        if (username.length === 0) {
+            showSignInError("please specify a username");
+        } else if (password1.length < 6) {
+            showSignInError("password must be at least 6 characters long");
+        } else if (password1 != password2) {
+            showSignInError("passwords must match");
+        } else {
+            alert("coming soon!!");  
         }
     }
     
@@ -65,7 +75,7 @@ $(function() {
         resizable: false,
         buttons: {
             "Sign up": function() {
-                $('#error-text').hide("fast");
+                $('#signin-error-text').hide("fast");
                 $('#signin-password2').show("fast");
                 $('#signin-password2-label').show("fast");
                 $(this).dialog('option', 'buttons', [{text: 'Sign up', click: onSignUpButton}]);
