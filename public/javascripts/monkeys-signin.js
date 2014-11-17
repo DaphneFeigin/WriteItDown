@@ -3,6 +3,11 @@ function showSignInError(errorText) {
     $('#signin-error-text').show("fast");        
 }
 
+function onSignInSuccess(sessionData) {
+    document.cookie = "userId=" + sessionData.userId;
+    location = '/';
+}
+
 function onSignInButton() {
     $('#signin-error-text').hide("fast");
     var username = $('#signin-username').val();
@@ -16,8 +21,7 @@ function onSignInButton() {
         dataType: "json",
         type: "POST",
         success: function(data, textStatus, jqxhr) {
-            document.cookie = "userId=" + data.userId;
-            location = '/';
+            onSignInSuccess(data);
         },
         error: function(jqxhr, textStatus, errorThrown) {
             showSignInError(jqxhr.responseText);
@@ -37,7 +41,21 @@ function onSignUpButton() {
     } else if (password1 != password2) {
         showSignInError("passwords must match");
     } else {
-        alert("coming soon!!");  
+        $.ajax({
+            url: "/signup",
+            data: {
+                userId: username,
+                password: password1
+            },
+            dataType: "json",
+            type: "POST",
+            success: function(data, textStatus, jqxhr) {
+                onSignInSuccess(data);
+            },
+            error: function(jqxhr, textStatus, errorThrown) {
+                showSignInError(jqxhr.responseText);
+            }
+        });
     }
 }
 

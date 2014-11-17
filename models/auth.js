@@ -12,6 +12,31 @@ function computeSHA1(password) {
     return sha.digest('base64');
 }
 
+function signInUser(userModel, callback) {
+    var getParams = {
+        TableName: tableName,
+        Key: {
+            Id: { S: userModel.userId },
+            SessionId: { S: "0" }
+        },
+        ConsistentRead: true,
+        AttributesToGet: [ 'Id', 'Salt', 'Password' ]
+    };
+    dynamoDB.getItem(getParams, function(err, data) {
+        if (err) {
+            log.error("signin: " + err);
+            callback("Error signing in; please try again", null);
+        } else {
+            var saltedPassword = data.Item.Salt.S + userModel.password;
+            if (data.Item && computeSHA1(saltedPassword) == data.Item.Password.S) {
+                callback(null, { userId: data.Item.Id.S });
+            } else {
+                callback("Bad username or password", null);
+            }
+        }
+    });
+}
+
 module.exports = {
     
     authRequest: function(req, callback) {
@@ -23,11 +48,14 @@ module.exports = {
     },
     
     createNewUser: function(userModel, callback) {
+        var salt = crypto.randomBytes(16).toString('hex');
+        var saltedPassword = salt + userModel.password;
         var putParams = {
             TableName: tableName,
             Item: {
                 Id: { S: userModel.userId },
-                Password: { S: computeSHA1(userModel.password) },
+                Salt: { S: salt },
+                Password: { S: computeSHA1(saltedPassword) },
                 SessionId: { S: "0" }
             },
             Expected : {
@@ -51,27 +79,5 @@ module.exports = {
         });
     },
     
-    signInUser: function(userModel, callback) {
-        var getParams = {
-            TableName: tableName,
-            Key: {
-                Id: { S: userModel.userId },
-                SessionId: { S: "0" }
-            },
-            ConsistentRead: true,
-            AttributesToGet: [ 'Id', 'Password' ]
-        };
-        dynamoDB.getItem(getParams, function(err, data) {
-            if (err) {
-                log.error("signin: " + err);
-                callback("Error signing in; please try again", null);
-            } else {
-                if (data.Item && computeSHA1(userModel.password) == data.Item.Password.S) {
-                    callback(null, { userId: data.Item.Id.S });
-                } else {
-                    callback("Bad username or password", null);
-                }
-            }
-        });
-    }
+    signInUser: signInUser
 }

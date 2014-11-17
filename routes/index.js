@@ -21,14 +21,31 @@ router.get('/', function(req, res) {
   });
 });
 
-router.post('/signin', function(req, res) {
-  var userModel = req.body;
+function handleSignin(userModel, res) {
   auth.signInUser(userModel, function(err, session) {
     if (err) {
       res.status(401).send(err);
     } else {
       log.info("User " + session.userId);
       res.json(session);
+    }
+  });  
+}
+
+router.post('/signin', function(req, res) {
+  var userModel = req.body;
+  handleSignin(userModel, res);
+});
+
+router.post('/signup', function(req, res) {
+  newUserModel = req.body;
+  auth.createNewUser(newUserModel, function(err, session) {
+    if (err) {
+      log.error("signup: " + err);
+      res.status(500).send(err);
+    } else {
+      log.info("User " + session.userId);
+      handleSignin(newUserModel, res);
     }
   });
 });
@@ -103,18 +120,6 @@ router.post('/tasks/:taskid', function(req, res){
   });
 });
 
-router.post('/users/new', function(req, res) {
-  newUserModel = req.body;
-  auth.createNewUser(newUserModel, function(err, session) {
-    if (err) {
-      log.error(err);
-      res.status(500).send(err);
-    } else {
-      log.info("User " + session.userId);
-      res.json(session);
-    }
-  });
-});
 
 module.exports = router;
 
