@@ -12,6 +12,34 @@ function computeSHA1(password) {
     return sha.digest('base64');
 }
 
+function createSession(userId, callback) {
+    var sessionId = crypto.randomBytes(16).toString('hex');
+    var now = new Date();
+    var expiration = new Date(now.getTime() + 60*1000);
+    var putParams = {
+        TableName: tableName,
+        Item: {
+            Id: { S: userId },
+            SessionId: { S: sessionId },
+            SessionExpiration: { N: expiration.getTime().toString() }
+        },
+        Expected : {
+            Id: {
+                ComparisonOperator: 'NULL'
+            }
+        }
+    };
+    dynamoDB.putItem(putParams, function(err, data) {
+        if (err) {
+            log.error(JSON.stringify(err));
+            callback(err.message, null);
+        } else {
+            log.info("User " + userId + " session " + sessionId);
+            callback(null, { userId: userId, sessionId: sessionId });
+        }
+    });
+}
+
 function signInUser(userModel, callback) {
     var getParams = {
         TableName: tableName,
@@ -29,7 +57,7 @@ function signInUser(userModel, callback) {
         } else {
             var saltedPassword = data.Item.Salt.S + userModel.password;
             if (data.Item && computeSHA1(saltedPassword) == data.Item.Password.S) {
-                callback(null, { userId: data.Item.Id.S });
+                createSession(data.Item.Id.S, callback);
             } else {
                 callback("Bad username or password", null);
             }
