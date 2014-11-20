@@ -4,7 +4,9 @@ function showSignInError(errorText) {
 }
 
 function onSignInSuccess(sessionData) {
+    alert(sessionData.sessionId);
     document.cookie = "userId=" + sessionData.userId;
+    document.cookie = "sessionId=" + sessionData.sessionId;
     location = '/';
 }
 
