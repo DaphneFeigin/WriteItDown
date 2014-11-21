@@ -8,7 +8,12 @@ block content
       h2 This is my list!
     button#create-new-task New
     div#task-list
-  a(href='/') Home
+  nav.ui-widget
+    ul
+      li
+        a(href='/',style='color:#0516FC') Home
+      li
+        a(href='/',style='color:#0516FC') Sign Out
   div#create-new-task-dialog(title='New task')
     form#create-new-task-form
       fieldset
