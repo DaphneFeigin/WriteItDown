@@ -28,7 +28,7 @@ $(function() {
         buttons: {
             "Create": function() {
                 if (createNewTaskForm.checkValidity()) {
-                    $.ajax({
+                    ajaxWrapper({
                         url: "/tasks/new",
                         data: {
                             name: $('#new-task-title').val(),
