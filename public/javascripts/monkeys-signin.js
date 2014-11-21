@@ -9,6 +9,11 @@ function onSignInSuccess(sessionData) {
     location = '/';
 }
 
+function signOut() {
+    document.cookie = "sessionId=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    document.cookie = "sessionId=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+}
+
 function onSignInButton() {
     $('#signin-error-text').hide("fast");
     var username = $('#signin-username').val();

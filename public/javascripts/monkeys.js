@@ -67,5 +67,9 @@ $(function() {
         constrainInput: true,
         minDate: new Date()
     });
+    
+    $("#sign-out").click(function() {
+        signOut(); 
+    });
 });
 
