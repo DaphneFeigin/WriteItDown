@@ -65,11 +65,38 @@ function signInUser(userModel, callback) {
     });
 }
 
+function checkSessionId(userId, sessionId, callback) {
+    var getParams = {
+        TableName: tableName,
+        Key: {
+            Id: { S: userId },
+            SessionId: { S: sessionId }
+        },
+        ConsistentRead: true,
+        AttributesToGet: [ 'Id', 'SessionExpiration' ]
+    };
+    dynamoDB.getItem(getParams, function(err, data) {
+        if (err) {
+            log.error("checkSessionId: " + err);
+            callback("Invalid session");
+        } else {
+            var now = new Date();
+            if (now.getTime() > data.Item.SessionExpiration.N) {
+                log.error("sessionId " + sessionId + " expired at " + data.Item.SessionExpiration.N + "; it is now " + now.getTime());
+                callback("Invalid session");
+            } else {
+                log.info("sessionId " + sessionId + " valid until " + data.Item.SessionExpiration.N + "; it is now " + now.getTime());
+                callback(null);
+            }
+        }
+    });
+}
+
 module.exports = {
     
     authRequest: function(req, callback) {
         if (req.cookies['userId']) {
-            callback(null);
+            checkSessionId(req.cookies['userId'], req.cookies['sessionId'], callback)
         } else {
             callback("Who are you?");   
         }
