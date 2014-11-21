@@ -55,8 +55,7 @@ function signInUser(userModel, callback) {
             log.error("signin: " + err);
             callback("Error signing in; please try again", null);
         } else {
-            var saltedPassword = data.Item.Salt.S + userModel.password;
-            if (data.Item && computeSHA1(saltedPassword) == data.Item.Password.S) {
+            if (data.Item && computeSHA1(data.Item.Salt.S + userModel.password) == data.Item.Password.S) {
                 createSession(data.Item.Id.S, callback);
             } else {
                 callback("Bad username or password", null);
