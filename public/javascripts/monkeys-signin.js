@@ -1,3 +1,23 @@
+function ajaxWrapper(ajaxObj) {
+    
+    function openSignInDialog(ajaxObj) {
+        signInDialog.ajaxToRetry = ajaxObj;
+        signInDialog.dialog('open');
+    }
+    
+    if (!$.cookie('sessionId')) {
+        // client-side check
+        openSignInDialog(ajaxObj);
+    } else {
+        // server-side check
+        ajaxObj.statusCode = {
+            401: function() { openSignInDialog(ajaxObj); }
+        }
+        $.ajax(ajaxObj);
+    }
+}
+
+
 function showSignInError(errorText) {
     $('#signin-error-text').text(errorText);
     $('#signin-error-text').show("fast");        
