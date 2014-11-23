@@ -1,7 +1,7 @@
 $(function() {
     
     
-    ajaxWrapper({
+    ajaxWithAuthCheck({
         url: "/tasks",
         dataType: "html",
         type: "GET",
@@ -19,7 +19,7 @@ $(function() {
         buttons: {
             "Create": function() {
                 if (createNewTaskForm.checkValidity()) {
-                    ajaxWrapper({
+                    ajaxWithAuthCheck({
                         url: "/tasks/new",
                         data: {
                             name: $('#new-task-title').val(),

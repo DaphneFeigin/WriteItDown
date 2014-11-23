@@ -6,7 +6,7 @@ $(function() {
     
     $(".task-notes-edit").blur(function() {
        var taskId = $(this).parent('[task-id]').attr('task-id');
-       ajaxWrapper({
+       ajaxWithAuthCheck({
             url: "/tasks/" + taskId,
             data: {
                 notes: $(this).val()
@@ -23,7 +23,7 @@ $(function() {
         text: false
     }).click(function(event){
         var taskId = $(this).parent('[task-id]').attr('task-id');
-        ajaxWrapper({
+        ajaxWithAuthCheck({
             url: "/tasks/" + taskId,
             data: {
                 isComplete: true

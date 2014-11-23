@@ -1,4 +1,4 @@
-function ajaxWrapper(ajaxObj) {
+function ajaxWithAuthCheck(ajaxObj) {
     
     function openSignInDialog(ajaxObj) {
         signInDialog.ajaxToRetry = ajaxObj;
