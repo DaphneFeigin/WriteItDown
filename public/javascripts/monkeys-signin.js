@@ -3,15 +3,21 @@ function showSignInError(errorText) {
     $('#signin-error-text').show("fast");        
 }
 
+function setCookie(k, v, expirationTime) {
+    var expirationDate = new Date();
+    expirationDate.setTime(expirationTime);
+    document.cookie = k + "=" + v + "; expires=" + expirationDate.toUTCString();
+}
+
 function onSignInSuccess(sessionData) {
-    document.cookie = "userId=" + sessionData.userId;
-    document.cookie = "sessionId=" + sessionData.sessionId;
+    setCookie("userId", sessionData.userId, sessionData.sessionExpiration);
+    setCookie("sessionId", sessionData.sessionId, sessionData.sessionExpiration);
     location = '/';
 }
 
 function signOut() {
-    document.cookie = "sessionId=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    document.cookie = "sessionId=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    setCookie("userId", "", 0);
+    setCookie("sessionId", "", 0);
 }
 
 function onSignInButton() {

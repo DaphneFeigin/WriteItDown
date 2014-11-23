@@ -14,14 +14,16 @@ function computeSHA1(password) {
 
 function createSession(userId, callback) {
     var sessionId = crypto.randomBytes(16).toString('hex');
+    var cookieLifetimeMillis = 24*60*60*1000; // 1d
     var now = new Date();
-    var expiration = new Date(now.getTime() + 60*1000);
+    var expirationTimeActual = now.getTime() + cookieLifetimeMillis;
+    var expirationTimeProactive = now.getTime() + cookieLifetimeMillis/2;
     var putParams = {
         TableName: tableName,
         Item: {
             Id: { S: userId },
             SessionId: { S: sessionId },
-            SessionExpiration: { N: expiration.getTime().toString() }
+            SessionExpiration: { N: expirationTimeActual.toString() }
         },
         Expected : {
             Id: {
@@ -35,7 +37,11 @@ function createSession(userId, callback) {
             callback(err.message, null);
         } else {
             log.info("User " + userId + " session " + sessionId);
-            callback(null, { userId: userId, sessionId: sessionId });
+            callback(null, {
+                userId: userId,
+                sessionId: sessionId,
+                sessionExpiration: expirationTimeProactive
+            });
         }
     });
 }
