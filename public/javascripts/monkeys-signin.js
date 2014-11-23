@@ -6,7 +6,7 @@ function showSignInError(errorText) {
 function setCookie(k, v, expirationTime) {
     var expirationDate = new Date();
     expirationDate.setTime(expirationTime);
-    document.cookie = k + "=" + v + "; expires=" + expirationDate.toUTCString();
+    $.cookie(k, v, { expires: expirationDate });
 }
 
 function onSignInSuccess(sessionData) {
@@ -16,8 +16,8 @@ function onSignInSuccess(sessionData) {
 }
 
 function signOut() {
-    setCookie("userId", "", 0);
-    setCookie("sessionId", "", 0);
+    $.removeCookie('userId');
+    $.removeCookie('sessionId');
 }
 
 function onSignInButton() {
