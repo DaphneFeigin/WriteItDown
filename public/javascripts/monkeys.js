@@ -1,13 +1,22 @@
 $(function() {
     
     function ajaxWrapper(ajaxObj) {
-        ajaxObj.statusCode = {
-            401: function() {
-                signInDialog.ajaxToRetry = ajaxObj;
-                signInDialog.dialog('open');
-            }
+        
+        function openSignInDialog(ajaxObj) {
+            signInDialog.ajaxToRetry = ajaxObj;
+            signInDialog.dialog('open');
         }
-        $.ajax(ajaxObj);
+        
+        if (!$.cookie('sessionId')) {
+            // client-side check
+            openSignInDialog(ajaxObj);
+        } else {
+            // server-side check
+            ajaxObj.statusCode = {
+                401: function() { openSignInDialog(ajaxObj); }
+            }
+            $.ajax(ajaxObj);
+        }
     }
     
     ajaxWrapper({
