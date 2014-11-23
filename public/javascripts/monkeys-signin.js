@@ -32,7 +32,12 @@ function setCookie(k, v, expirationTime) {
 function onSignInSuccess(sessionData) {
     setCookie("userId", sessionData.userId, sessionData.sessionExpiration);
     setCookie("sessionId", sessionData.sessionId, sessionData.sessionExpiration);
-    location = '/';
+    if (signInDialog.ajaxToRetry) {
+        signInDialog.dialog('close');
+        $.ajax(signInDialog.ajaxToRetry);
+    } else {
+        location = '/';
+    }
 }
 
 function signOut() {
