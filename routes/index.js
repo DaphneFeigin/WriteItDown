@@ -6,8 +6,6 @@ var log = require('npmlog');
 var dynamiteTNT = require('../models/dynamiteTNT');
 var auth = require('../models/auth');
 
-var clownie = 'clownie';
-
 if (typeof String.prototype.startsWith != 'function') {
   String.prototype.startsWith = function (str){
     return this.slice(0, str.length) == str;
@@ -75,7 +73,7 @@ router.param('taskid', function(req, res, next, id) {
 });
 
 router.get('/tasks', function(req, res) {
-  dynamiteTNT.queryTasksForOwner(clownie, function(err, tasks) {
+  dynamiteTNT.queryTasksForOwner(req.cookies['userId'], function(err, tasks) {
     if (err) {
       log.error(err, err.stack);
       res.status(500).send(err);
@@ -95,7 +93,7 @@ router.get('/tasks', function(req, res) {
 router.post('/tasks/new', function(req, res) {
   log.info(JSON.stringify(req.body));
   itemModel = req.body;
-  dynamiteTNT.createNewTask(clownie, itemModel, function(err, newTask) {
+  dynamiteTNT.createNewTask(req.cookies['userId'], itemModel, function(err, newTask) {
     if (err) {
       log.error(err, err.stack);
       res.status(500).send(err);
@@ -109,7 +107,7 @@ router.post('/tasks/new', function(req, res) {
 router.post('/tasks/:taskid', function(req, res){
   log.info(JSON.stringify(req.body));
   itemModel = req.body;
-  dynamiteTNT.updateTask(clownie, req.params.taskid, itemModel, function(err, updatedTask) {
+  dynamiteTNT.updateTask(req.cookies['userId'], req.params.taskid, itemModel, function(err, updatedTask) {
     if (err) {
       log.error(err, err.stack);
       res.status(500).send(err);

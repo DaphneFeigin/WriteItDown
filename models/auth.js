@@ -100,7 +100,7 @@ function checkSessionId(userId, sessionId, callback) {
 module.exports = {
     
     authRequest: function(req, callback) {
-        if (req.cookies['userId']) {
+        if (req.cookies['userId'] && req.cookies['sessionId']) {
             checkSessionId(req.cookies['userId'], req.cookies['sessionId'], callback)
         } else {
             callback("Who are you?");   
