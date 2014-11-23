@@ -48,8 +48,15 @@ router.post('/signup', function(req, res) {
   });
 });
 
+router.post('/signout', function(req, res) {
+  // no callback; it's best-effort
+  auth.expireSession(req.cookies['userId'], req.cookies['sessionId']); 
+});
+
 router.use('/tasks', function(req, res, next) {
-  auth.authRequest(req, function(err) {
+  var userId = req.cookies['userId'];
+  var sessionId = req.cookies['sessionId'];
+  auth.authRequest(userId, sessionId, function(err) {
     log.info("auth: " + err);
     if (err) {
       res.status(401).send();

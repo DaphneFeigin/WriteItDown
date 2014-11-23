@@ -14,10 +14,10 @@ function computeSHA1(password) {
 
 function createSession(userId, callback) {
     var sessionId = crypto.randomBytes(16).toString('hex');
-    var cookieLifetimeMillis = 24*60*60*1000; // 1d
+    var sessionLifetimeMillis = 24*60*60*1000; // 1d
     var now = new Date();
-    var expirationTimeActual = now.getTime() + cookieLifetimeMillis;
-    var expirationTimeProactive = now.getTime() + cookieLifetimeMillis/2;
+    var expirationTimeActual = now.getTime() + sessionLifetimeMillis;
+    var expirationTimeProactive = now.getTime() + sessionLifetimeMillis/2;
     var putParams = {
         TableName: tableName,
         Item: {
@@ -42,6 +42,33 @@ function createSession(userId, callback) {
                 sessionId: sessionId,
                 sessionExpiration: expirationTimeProactive
             });
+        }
+    });
+}
+
+function updateSession(userId, sessionId, expirationDate) {
+    var updateParams = {
+        TableName: tableName,
+        Key: {
+            Id: { S: userId },
+            SessionId: { S: sessionId },
+        },
+        AttributeUpdates: {
+            SessionExpiration: {
+                Action: 'PUT',
+                Value: { N: expirationDate.getTime().toString() }
+            }
+        },
+        Expected : {
+            Id: { ComparisonOperator: 'NOT_NULL' }
+        },
+        ReturnValues: 'NONE'
+    };
+    dynamoDB.updateItem(updateParams, function(err, data) {
+        if (err) {
+            log.error(JSON.stringify(err));
+        } else {
+            log.info("User " + userId + " session " + sessionId + " expired now");
         }
     });
 }
@@ -99,12 +126,16 @@ function checkSessionId(userId, sessionId, callback) {
 
 module.exports = {
     
-    authRequest: function(req, callback) {
-        if (req.cookies['userId'] && req.cookies['sessionId']) {
-            checkSessionId(req.cookies['userId'], req.cookies['sessionId'], callback)
+    authRequest: function(userId, sessionId, callback) {
+        if (userId && sessionId) {
+            checkSessionId(userId, sessionId, callback)
         } else {
             callback("Who are you?");   
         }
+    },
+    
+    expireSession: function(userId, sessionId) {
+        updateSession(userId, sessionId, new Date());            
     },
     
     createNewUser: function(userModel, callback) {

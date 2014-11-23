@@ -41,6 +41,16 @@ function onSignInSuccess(sessionData) {
 }
 
 function signOut() {
+    $.ajax({
+        url: "/signout",
+        data: {
+            userId: $.cookie('userId'),
+            sessionId: $.cookie('sessionId')
+        },
+        dataType: "json",
+        type: "POST"
+        // No callbacks: best effort
+    });
     $.removeCookie('userId');
     $.removeCookie('sessionId');
 }
