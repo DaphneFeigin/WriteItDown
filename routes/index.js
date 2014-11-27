@@ -80,7 +80,8 @@ router.param('taskid', function(req, res, next, id) {
 });
 
 router.get('/tasks', function(req, res) {
-  dynamiteTNT.queryTasksForOwner(req.cookies['userId'], function(err, tasks) {
+  var userId = req.cookies['userId'];
+  dynamiteTNT.queryTasksForOwner(userId, function(err, tasks) {
     if (err) {
       log.error(err, err.stack);
       res.status(500).send(err);
@@ -88,7 +89,8 @@ router.get('/tasks', function(req, res) {
       log.info('Tasks ' + JSON.stringify(tasks));
       if (req.accepts('html')) {
         res.render('tasklist', {
-          taskList: tasks,
+          userId: userId,
+          taskList: tasks
         });
       } else {
         res.json(tasks);
