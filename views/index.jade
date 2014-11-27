@@ -3,26 +3,13 @@ extends layout
 block head-javascripts
 
 block content
-  div.tasklist-div.ui-widget
-    div(style='text-align: left')
-      h2 This is my list!
-    button#create-new-task New
-    div#task-list
+  div.ui-widget#task-list
   nav.ui-widget
     ul
       li
         a(href='/',style='color:#0516FC') Home
       li
         a#sign-out(href='/',style='color:#0516FC') Sign out
-  div#create-new-task-dialog(title='New task')
-    form#create-new-task-form
-      fieldset
-        label(for='title') Title (required)
-        input#new-task-title(type='text', name='title', maxlength='25', required)
-        label(for='dateDue') Due date (required)
-        input#new-task-due-date-picker(name='dateDue', required)
-        label(for='notes') Notes
-        textarea#new-task-notes(name='notes')
   div#signin-dialog
     p#signin-error-text(style='color: red; display: none')
     form#signin-form
