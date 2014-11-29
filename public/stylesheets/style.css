@@ -44,18 +44,14 @@ label {
   display: block;
 }
 
-.tasklist-div {
-  margin-left: auto;
-  margin-right: auto;
-  width: 500px;
-  padding-bottom: 50px;
-  padding-top: 0px;
-  text-align: left;
+#tasklist-div {
+  padding: 10px;
+  background-color: aliceblue;
 }
 
 .tasklist-header {
   height: 40px;
-  margin-bottom: 10px;
+  padding: 8px;
 }
 
 .tasklist-header h2 {
