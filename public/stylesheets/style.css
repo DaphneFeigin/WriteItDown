@@ -53,6 +53,22 @@ label {
   text-align: left;
 }
 
+.tasklist-header {
+  height: 40px;
+  margin-bottom: 10px;
+}
+
+.tasklist-header-text {
+  height: 100%;
+  display: inline-block;
+  margin: inherit;
+}
+
+#tasklist-header-sign-out-button {
+  float: right;
+  height: 100%;
+}
+
 .input-element {
   margin-left: 5px;
   margin-right: 5px;
