@@ -75,7 +75,7 @@ label {
 }
 
 .task-due-date {
-  float: left;
+  float: right;
   text-align: right;
   width: 35%;
 }
