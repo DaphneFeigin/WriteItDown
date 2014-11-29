@@ -81,20 +81,25 @@ label {
 }
 
 .task-header {
-  height: auto;
   overflow: hidden;
   display: inline-block;
 }
 
 .task-name {
   float: left;
-  width: 55%;
+  width: 75%;
+  margin: 0;
+  padding: 5px;
 }
 
 .task-due-date {
   float: right;
-  text-align: right;
-  width: 35%;
+  text-align: center;
+  width: 20%;
+  background-color: rgb(216,0,0);
+  padding: 5px;
+  border: 2px;
+  border-radius: 10px;
 }
 
 .task-notes-edit {
