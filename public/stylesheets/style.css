@@ -58,13 +58,13 @@ label {
   margin-bottom: 10px;
 }
 
-.tasklist-header-text {
+.tasklist-header h2 {
   height: 100%;
   display: inline-block;
   margin: inherit;
 }
 
-#tasklist-header-sign-out-button {
+.tasklist-header .signout-button {
   float: right;
   height: 100%;
 }
