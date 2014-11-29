@@ -47,6 +47,9 @@ label {
 #tasklist-div {
   padding: 10px;
   background-color: aliceblue;
+  border: 2px solid;
+  border-color: darkblue;
+  border-radius: 20px;
 }
 
 .tasklist-header {
@@ -58,6 +61,8 @@ label {
   height: 100%;
   display: inline-block;
   margin: inherit;
+  font-family: trebuchet ms;
+  color: darkblue;
 }
 
 .tasklist-header .signout-button {
