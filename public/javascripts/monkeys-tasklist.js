@@ -88,6 +88,13 @@ $(function() {
         constrainInput: true,
         minDate: new Date()
     });
+    
+    $("button.signout-button").button({
+       text: 'Sign out'
+    }).click(function(event) {
+        signOut();
+        location = '/';
+    });
 
 });
 
