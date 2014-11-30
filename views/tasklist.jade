@@ -6,7 +6,7 @@ div#tasklist-div
         each task in taskList
           div.task-header(task-id="#{task.id}")
             .task-name #{task.name}
-            .task-due-date #{task.dateDueFriendly}
+            .task-due-date(due-date="#{task.dateDue}") #{task.dateDueFriendly}
           div(task-id="#{task.id}")
             textarea.task-notes-edit #{task.notes}
             button.task-check-complete

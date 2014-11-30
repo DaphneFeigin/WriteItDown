@@ -4,6 +4,14 @@ $(function() {
         collapsible: true
     });
     
+    $(".task-due-date").each(function(index, element) {
+        var dueDate = new Date($(element).attr('due-date'));
+        var now = new Date();
+        if (now > dueDate) {
+            $(element).addClass('task-due-date-overdue');
+        }
+    });
+    
     $(".task-notes-edit").blur(function() {
        var taskId = $(this).parent('[task-id]').attr('task-id');
        ajaxWithAuthCheck({
