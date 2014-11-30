@@ -2,7 +2,15 @@ div#tasklist-div
     div.tasklist-header
       h2.tasklist-header-text #{userId}: These are your tasks!
       button.signout-button Sign out
-    button#create-new-task New
+    div#tasks-accordion
+        each task in taskList
+          div.task-header(task-id="#{task.id}")
+            .task-name #{task.name}
+            .task-due-date #{task.dateDueFriendly}
+          div(task-id="#{task.id}")
+            textarea.task-notes-edit #{task.notes}
+            button.task-check-complete
+    button#create-new-task(style='margin-top: 10px') New
     div#create-new-task-dialog(title='New task')
         form#create-new-task-form
           fieldset
@@ -12,12 +20,4 @@ div#tasklist-div
             input#new-task-due-date-picker(name='dateDue', required)
             label(for='notes') Notes
             textarea#new-task-notes(name='notes')
-    div#tasks-accordion
-        each task in taskList
-          div.task-header(task-id="#{task.id}")
-            .task-name #{task.name}
-            .task-due-date #{task.dateDueFriendly}
-          div(task-id="#{task.id}")
-            textarea.task-notes-edit #{task.notes}
-            button.task-check-complete
 script(src='/javascripts/monkeys-tasklist.js')

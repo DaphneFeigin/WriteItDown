@@ -96,10 +96,16 @@ label {
   float: right;
   text-align: center;
   width: 20%;
-  background-color: rgb(216,0,0);
+  background-color: rgb(19,255,5);
+  color: black;
   padding: 5px;
   border: 2px;
   border-radius: 10px;
+}
+
+.task-due-date-overdue {
+  background-color: rgb(216,0,0);
+  color: white;
 }
 
 .task-notes-edit {
