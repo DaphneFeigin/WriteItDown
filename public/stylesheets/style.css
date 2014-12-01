@@ -103,6 +103,10 @@ label {
   border-radius: 10px;
 }
 
+.task-due-date-almost-due {
+  background-color: rgb(222,255,3);
+}
+
 .task-due-date-overdue {
   background-color: rgb(216,0,0);
   color: white;

@@ -6,9 +6,13 @@ $(function() {
     
     $(".task-due-date").each(function(index, element) {
         var dueDate = new Date($(element).attr('due-date'));
+        var dueDateMinusOne = new Date(dueDate);
+        dueDateMinusOne.setDate(dueDateMinusOne.getDate() - 1);
         var now = new Date();
         if (now > dueDate) {
             $(element).addClass('task-due-date-overdue');
+        } else if (now > dueDateMinusOne) {
+            $(element).addClass('task-due-date-almost-due');
         }
     });
     
