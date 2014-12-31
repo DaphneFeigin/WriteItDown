@@ -3,6 +3,11 @@
         "KeyName": {
             "Type": "String",
             "Description": "SSH key for EC2 instances"
+        },
+        "DomainName": {
+            "Type": "String",
+            "Description": "Domain name for Route53 record",
+            "Default": "pisomojado.org"
         }
     },
     "Outputs": {
@@ -207,6 +212,17 @@
                     "SubnetId": { "Ref": "SingleSubnet" }
                 } ],
                 "Tags": [ { "Key": "Name", "Value": "WriteItDownSingleInstance" } ]
+            }
+        },
+        "Route53RecordSet": {
+            "Type": "AWS::Route53::RecordSet",
+            "Properties": {
+                "Comment": "WriteItDown record, auto-created by CloudFormation stack",
+                "HostedZoneName": { "Fn::Join": [ "", [ { "Ref": "DomainName" }, "." ] ] },
+                "Name": { "Fn::Join": [ "", [ "writeitdown.", { "Ref": "DomainName" }, "." ] ] },
+                "Type": "A",
+                "TTL": "60",
+                "ResourceRecords": [ { "Fn::GetAtt": [ "SingleEc2Instance", "PublicIp" ] } ]
             }
         }
     }
