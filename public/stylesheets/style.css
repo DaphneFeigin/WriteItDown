@@ -112,12 +112,15 @@ label {
   color: white;
 }
 
+.task-content {
+  display: inline-block;
+  width: inherit;
+}
+
 .task-notes-edit {
-  width: 100%;
 }
 
 button.task-check-complete {
-  float: right;
 }
 
 .no-close .ui-dialog-titlebar-close {
