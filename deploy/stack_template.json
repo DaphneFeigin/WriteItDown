@@ -256,7 +256,7 @@
             },
             "CreationPolicy": {
                 "ResourceSignal": {
-                    "Timeout": "PT5M"
+                    "Timeout": "PT10M"
                 }
             },
             "Metadata": {
