@@ -142,6 +142,22 @@
                 "Path": "/",
                 "Policies": [
                     {
+                        "PolicyName": "CodeDeployPolicy",
+                        "PolicyDocument": {
+                            "Statement": [
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "autoscaling:Describe*",
+                                        "cloudformation:Describe*",
+                                        "cloudformation:GetTemplate"
+                                    ],
+                                    "Resource": "*"
+                                }
+                            ]
+                        }
+                    },
+                    {
                         "PolicyName": "S3Policy",
                         "PolicyDocument": {
                             "Version": "2012-10-17",
@@ -149,9 +165,10 @@
                                 "Sid": "Stmt1410060373000",
                                 "Effect": "Allow",
                                 "Action": [
-                                  "s3:GetObject"
+                                  "s3:Get*"
                                 ],
                                 "Resource": [
+                                  "arn:aws:s3:::aws-codedeploy*",
                                   "arn:aws:s3:::WriteItDown/latest.zip",
                                   "arn:aws:s3:::WriteItDown/selfsigned_cert.pem",
                                   "arn:aws:s3:::WriteItDown/selfsigned_key.pem"
@@ -211,7 +228,42 @@
                     "DeleteOnTermination": "true",
                     "SubnetId": { "Ref": "SingleSubnet" }
                 } ],
-                "Tags": [ { "Key": "Name", "Value": "WriteItDownSingleInstance" } ]
+                "Tags": [ { "Key": "Name", "Value": "WriteItDownSingleInstance" } ],
+                "UserData": {
+                    "Fn::Base64": {
+                        "Fn::Join": [ "", [
+                            "#!/bin/bash -ex\n",
+                            "yum update -y aws-cfn-bootstrap\n",
+                            "yum install -y aws-cli\n",
+                            "function error_exit\n",
+                            "{\n",
+                            "   /opt/aws/bin/cfn-signal -e 1 --stack ", { "Ref": "AWS::StackName" }, " --resource SingleEc2Instance\n",
+                            "   exit 1\n",
+                            "}\n",
+                            "aws s3 cp 's3://aws-codedeploy-us-east-1/latest/codedeploy-agent.noarch.rpm' /tmp || error_exit\n",
+                            "yum -y install /tmp/codedeploy-agent.noarch.rpm || error_exit\n",
+                            "/opt/aws/bin/cfn-init -s ", { "Ref": "AWS::StackId" }, " -r SingleEc2Instance --region ", { "Ref": "AWS::Region" }, " || error_exit\n",
+                            "/opt/aws/bin/cfn-signal -e 0 --stack ", { "Ref": "AWS::StackName" }, " --resource SingleEc2Instance\n"
+                        ] ]
+                    }
+                }
+            },
+            "CreationPolicy": {
+                "ResourceSignal": {
+                    "Timeout": "PT5M"
+                }
+            },
+            "Metadata": {
+                "AWS::CloudFormation::Init": {
+                    "services": {
+                        "sysvinit": {
+                            "codedeploy-agent": {
+                                "enabled": "true",
+                                "ensureRunning": "true"
+                            }
+                        }
+                    }
+                }
             }
         },
         "Route53RecordSet": {
