@@ -1,0 +1,9 @@
+version: 0.0
+os: linux
+hooks:
+  AfterInstall:
+    - location: deploy/get_cert.sh
+      timeout: 60
+  ApplicationStart:
+    - location: deploy/start_app.sh
+      timeout: 20

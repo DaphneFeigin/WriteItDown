@@ -240,6 +240,7 @@
                             "#!/bin/bash -ex\n",
                             "yum update -y aws-cfn-bootstrap\n",
                             "yum install -y aws-cli\n",
+                            "yum -y install nodejs npm --enablerepo=epel\n",
                             "function error_exit\n",
                             "{\n",
                             "   /opt/aws/bin/cfn-signal -e 1 --stack ", { "Ref": "AWS::StackName" }, " --resource SingleEc2Instance\n",
@@ -340,6 +341,6 @@
               }
             ]
           }
-        },
+        }
     }
 }
