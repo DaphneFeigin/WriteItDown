@@ -18,11 +18,6 @@
         "Ec2InstancePublicIp": {
             "Value": { "Fn::GetAtt": [ "SingleEc2Instance", "PublicIp" ] },
             "Description": "Public IP of single EC2 instance"
-        },
-        "CodeDeployTrustRoleARN": {
-            "Value": {
-                "Fn::GetAtt": [ "CodeDeployTrustRole", "Arn" ]
-            }
         }
     },
     "Resources": {
@@ -282,65 +277,6 @@
                 "TTL": "60",
                 "ResourceRecords": [ { "Fn::GetAtt": [ "SingleEc2Instance", "PublicIp" ] } ]
             }
-        },
-        "CodeDeployTrustRole": {
-          "Type": "AWS::IAM::Role",
-          "Properties": {
-            "AssumeRolePolicyDocument": {
-              "Statement": [
-                {
-                  "Sid": "1",
-                  "Effect": "Allow",
-                  "Principal": {
-                    "Service": [
-                      "codedeploy.us-east-1.amazonaws.com",
-                      "codedeploy.us-west-2.amazonaws.com"
-                    ]
-                  },
-                  "Action": "sts:AssumeRole"
-                }
-              ]
-            },
-            "Path": "/"
-          }
-        },
-        "CodeDeployRolePolicies": {
-          "Type": "AWS::IAM::Policy",
-          "Properties": {
-            "PolicyName": "CodeDeployPolicy",
-            "PolicyDocument": {
-              "Statement": [
-                {
-                  "Effect": "Allow",
-                  "Resource": [
-                    "*"
-                  ],
-                  "Action": [
-                    "ec2:Describe*"
-                  ]
-                },
-                {
-                  "Effect": "Allow",
-                  "Resource": [
-                    "*"
-                  ],
-                  "Action": [
-                    "autoscaling:CompleteLifecycleAction",
-                    "autoscaling:DeleteLifecycleHook",
-                    "autoscaling:DescribeLifecycleHooks",
-                    "autoscaling:DescribeAutoScalingGroups",
-                    "autoscaling:PutLifecycleHook",
-                    "autoscaling:RecordLifecycleActionHeartbeat"
-                  ]
-                }
-              ]
-            },
-            "Roles": [
-              {
-                "Ref": "CodeDeployTrustRole"
-              }
-            ]
-          }
         }
     }
 }
