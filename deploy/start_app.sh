@@ -1,2 +1,3 @@
 #!/bin/bash
-cd /writeItDown && npm start &
+cd /writeItDown
+npm start
