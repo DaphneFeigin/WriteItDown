@@ -7,8 +7,8 @@
   },
   "config": {
     "port": 443,
-    "certFile": "~/selfsigned_cert.pem",
-    "certKeyFile": "~/selfsigned_key.pem",
+    "certFile": "/writeItDown/selfsigned_cert.pem",
+    "certKeyFile": "/writeItDown/selfsigned_key.pem",
     "logging": "FILE",
     "logFile": "/var/log/WriteItDown"
   },
