@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node ./bin/ctrl.js start"
+    "start": "node ./bin/ctrl.js start",
+    "stop": "node ./bin/ctrl.js stop"
   },
   "config": {
     "port": 443,

@@ -4,6 +4,9 @@ files:
   - source: /
     destination: /writeItDown
 hooks:
+  ApplicationStop:
+    - location: deploy/stop_app.sh
+      timeout: 20
   AfterInstall:
     - location: deploy/get_cert.sh
       timeout: 60
