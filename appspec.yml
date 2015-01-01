@@ -1,5 +1,8 @@
 version: 0.0
 os: linux
+files:
+  - source: /
+    destination: /writeItDown
 hooks:
   AfterInstall:
     - location: deploy/get_cert.sh
