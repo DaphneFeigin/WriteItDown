@@ -20,8 +20,8 @@ if (process.env.npm_package_config_sslDisabled) {
   http.createServer(app).listen(port);
   log.info('http on port ' + port);
 } else {
-  var ssl_cert_file = process.env.npm_package_config_certFile || '~/selfsigned_cert.pem';
-  var ssl_key_file = process.env.npm_package_config_certKeyFile || '~/selfsigned_key.pem';
+  var ssl_cert_file = process.env.npm_package_config_certFile || '/writeItDown/selfsigned_cert.pem';
+  var ssl_key_file = process.env.npm_package_config_certKeyFile || '/writeItDown/selfsigned_key.pem';
   var ssl_options = {
     key: fs.readFileSync(ssl_key_file),
     cert: fs.readFileSync(ssl_cert_file)
